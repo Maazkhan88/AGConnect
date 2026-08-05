@@ -1,5 +1,67 @@
 # Deployment
 
-Deploy the Next.js application to Vercel with an external managed PostgreSQL database and S3-compatible object storage. Configure all `.env.example` values in the platform secret store, use pooled and direct migration database URLs where the provider requires them, and run `prisma migrate deploy` before traffic reaches a new schema.
+AGConnect deploys to **Cloudflare Workers** via **OpenNext** (`@opennextjs/cloudflare`), backed by a **Cloudflare D1** database (SQLite at the edge), schema-managed with **Drizzle**. There is no external Postgres/S3 dependency in this path — `.env.example`'s `DATABASE_URL`/`S3_*` variables are leftovers from an earlier design and are unused by the current app.
 
-Production requires TLS, private database networking where possible, bucket CORS restricted to the application, versioned backups, retention jobs, email provider credentials, monitoring, CSP reporting, and key rotation. Never use the Compose credentials in production.
+## One-time setup (requires your own Cloudflare login)
+
+```bash
+npx wrangler login
+
+# 1. Create the D1 database
+npx wrangler d1 create agconnect-db
+# Copy the returned `database_id` into wrangler.jsonc -> d1_databases[0].database_id
+# (currently a placeholder: "REPLACE_WITH_D1_DATABASE_ID")
+
+# 2. Apply the Drizzle-generated schema migration
+pnpm db:migrate:remote
+
+# 3. Seed brands, AG Holding's staff/profile, and the admin login
+#    ADMIN_PASSWORD is required for a real deployment — otherwise a dev-only
+#    default is used and printed once (change it via Admin > Staff after login).
+ADMIN_EMAIL=you@agholding.ae ADMIN_PASSWORD='choose-a-strong-password' pnpm db:seed:remote
+
+# 4. Set the session-signing secret as a Worker secret (never commit it)
+npx wrangler secret put AUTH_SECRET
+```
+
+## Every deploy
+
+```bash
+pnpm deploy:cloudflare   # opennextjs-cloudflare build && opennextjs-cloudflare deploy
+```
+
+This builds the full Next.js app (SSR, server actions, `/api/*` route handlers) into a Cloudflare Worker via `.open-next/`, with static assets served from `.open-next/assets` and D1 bound as `DB` (see `wrangler.jsonc`).
+
+To preview the Worker build locally before deploying:
+
+```bash
+pnpm preview:cloudflare  # opennextjs-cloudflare build && opennextjs-cloudflare preview
+```
+
+## Local development
+
+```bash
+pnpm dev                          # next dev — reads the local D1 (miniflare) via getCloudflareContext
+npx wrangler d1 migrations apply agconnect-db --local   # or: pnpm db:migrate:local
+pnpm db:seed:local                                       # generates db/seed.sql and applies it locally
+```
+
+`pnpm db:seed` alone only (re)generates `db/seed.sql` from `db/seed.ts` — it does not touch any database. Pair it with `wrangler d1 execute ... --file=./db/seed.sql --local|--remote`, or use the `:local`/`:remote` convenience scripts which do both steps.
+
+## Static-export fallback (`wrangler.static.jsonc`)
+
+Before this milestone, the app was deployed as a static export (`next build` with `output: "export"`, assets served straight from Cloudflare's asset host, no server runtime, no database). That configuration is preserved in `wrangler.static.jsonc` purely as a documented fallback — it cannot serve `/admin`, `/api/*`, or dynamic `/p/[slug]` pages, since those now require D1 reads/writes at request time. To use it you would also need to revert `next.config.ts`'s `output` back to `"export"` and re-add `generateStaticParams()` to the dynamic routes. There is no reason to use it going forward; it exists only so the pre-D1 deploy path isn't lost.
+
+## Database schema changes
+
+Edit `db/schema.ts`, then:
+
+```bash
+pnpm db:generate            # drizzle-kit generate -> new file under drizzle/
+pnpm db:migrate:local        # apply to local D1 for testing
+pnpm db:migrate:remote       # apply to the real D1 database once verified
+```
+
+`prisma/schema.prisma` and `prisma/seed.ts` are superseded by `db/schema.ts` and `db/seed.ts` respectively and are kept only for historical reference / as the original data-model sketch — they are not run anywhere in this deploy path.
+
+Production still requires: TLS (handled by Cloudflare), a real `AUTH_SECRET` Worker secret, a strong `ADMIN_PASSWORD` set at seed time, and rotating the seeded admin password after first login.

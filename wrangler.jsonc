@@ -1,11 +1,24 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "agconnect",
-  "assets": {
-    "directory": "./out",
-    "not_found_handling": "single-page-application"
-  },
+  "main": ".open-next/worker.js",
   "compatibility_date": "2026-07-30",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Provision once with your own Cloudflare login, then paste the returned id below:
+  //   npx wrangler d1 create agconnect-db
+  //   npx wrangler d1 migrations apply agconnect-db --remote
+  //   npx wrangler d1 execute agconnect-db --remote --file=./db/seed.sql
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "agconnect-db",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
   "observability": { "enabled": true }
 }

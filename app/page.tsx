@@ -12,7 +12,7 @@ export default function Home() {
     <main className="home-shell">
       <nav className="topbar" aria-label="Primary navigation">
         <Link className="brand-mark" href="/">AG<span>CONNECT</span></Link>
-        <div className="nav-actions"><Link href="/p/amna-haddad">View sample profile</Link><Link className="button small" href="/admin">Open workspace <ArrowRight size={16} /></Link></div>
+        <div className="nav-actions"><Link href="/p/maaz-khan">View sample profile</Link><Link className="button small" href="/admin">Open workspace <ArrowRight size={16} /></Link></div>
       </nav>
       <section className="hero">
         <p className="eyebrow">AG Holding · Corporate identity infrastructure</p>

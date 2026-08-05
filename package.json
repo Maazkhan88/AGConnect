@@ -17,13 +17,18 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply agconnect-db --local",
+    "db:migrate:remote": "wrangler d1 migrations apply agconnect-db --remote",
+    "db:seed": "tsx db/seed.ts",
+    "db:seed:local": "pnpm db:seed && wrangler d1 execute agconnect-db --local --file=./db/seed.sql",
+    "db:seed:remote": "pnpm db:seed && wrangler d1 execute agconnect-db --remote --file=./db/seed.sql",
+    "brands:sample-colors": "tsx scripts/sample-brand-colors.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",
     "bcryptjs": "3.0.2",
+    "drizzle-orm": "^0.45.2",
     "lucide-react": "0.468.0",
     "next": "16.2.11",
     "react": "19.2.6",
@@ -32,11 +37,13 @@
     "zod": "4.1.11"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260804.1",
     "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "drizzle-kit": "^0.31.10",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.6",
     "prettier": "3.6.2",

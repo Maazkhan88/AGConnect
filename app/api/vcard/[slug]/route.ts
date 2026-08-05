@@ -1,4 +1,33 @@
 import { NextResponse } from "next/server";
-const escape=(value:string)=>value.replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
-export function generateStaticParams(){return [{slug:"amna-haddad"},{slug:"maaz-khan"}]}
-export async function GET(_:Request,{params}:{params:Promise<{slug:string}>}){const {slug}=await params;const maaz=slug==="maaz-khan";if(!maaz&&slug!=="amna-haddad")return new NextResponse("Not found",{status:404});const lines=maaz?["BEGIN:VCARD","VERSION:3.0",`FN:${escape("Maaz Khan")}`,"ORG:AG Holding","TITLE:Head of Marketing","TEL;TYPE=CELL:+971502138765","EMAIL;TYPE=WORK:maaz.khan@agholding.ae","URL:https://www.agholding.ae",`ADR;TYPE=WORK:;;${escape("2nd Floor, AG Holding Building")};Dubai;;UAE`,"END:VCARD"]:["BEGIN:VCARD","VERSION:3.0",`FN:${escape("Amna Haddad")}`,"ORG:Northstar Advisory","TITLE:Director of Strategic Partnerships","TEL;TYPE=WORK,VOICE:+971500000000","EMAIL;TYPE=WORK:amna@example.test","END:VCARD"];return new NextResponse(lines.join("\r\n"),{headers:{"Content-Type":"text/vcard; charset=utf-8","Content-Disposition":`attachment; filename="${slug}.vcf"`,"Cache-Control":"private, max-age=300"}})}
+import { getPublicProfile } from "@/lib/profile";
+
+export const dynamic = "force-dynamic";
+
+const escape = (value: string) => value.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+
+export async function GET(_: Request, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const profile = await getPublicProfile(slug);
+  if (!profile) return new NextResponse("Not found", { status: 404 });
+
+  const lines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${escape(profile.displayName)}`,
+    `ORG:${escape(profile.brand.displayName)}`,
+    `TITLE:${escape(profile.jobTitle)}`,
+  ];
+  if (profile.phone) lines.push(`TEL;TYPE=CELL:${profile.phone}`);
+  lines.push(`EMAIL;TYPE=WORK:${profile.workEmail}`);
+  if (profile.brand.website) lines.push(`URL:${profile.brand.website}`);
+  if (profile.officeAddress) lines.push(`ADR;TYPE=WORK:;;${escape(profile.officeAddress)};;;;`);
+  lines.push("END:VCARD");
+
+  return new NextResponse(lines.join("\r\n"), {
+    headers: {
+      "Content-Type": "text/vcard; charset=utf-8",
+      "Content-Disposition": `attachment; filename="${slug}.vcf"`,
+      "Cache-Control": "private, max-age=300",
+    },
+  });
+}
