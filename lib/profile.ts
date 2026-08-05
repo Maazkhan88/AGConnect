@@ -5,6 +5,8 @@ import { DEFAULT_THEME, parseSocialLinks, parseThemeValues, type SocialLink } fr
 import { resolveTheme, themeSchema, type Theme } from "@/lib/theme/theme";
 
 export type PublicProfile = {
+  id: string;
+  staffId: string;
   slug: string;
   displayName: string;
   jobTitle: string;
@@ -16,10 +18,13 @@ export type PublicProfile = {
   workEmail: string;
   phone: string | null;
   brand: {
+    id: string;
+    groupId: string;
     slug: string;
     displayName: string;
     website: string | null;
     logoPath: string | null;
+    bannerPath: string | null;
     socials: SocialLink[];
   };
   theme: Theme;
@@ -30,6 +35,8 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
 
   const [row] = await db
     .select({
+      profileId: profiles.id,
+      staffId: profiles.staffId,
       slug: profiles.slug,
       jobTitle: profiles.jobTitle,
       biography: profiles.biography,
@@ -43,10 +50,12 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
       staffPhone: staff.phone,
       staffJobTitle: staff.jobTitleEn,
       brandId: brands.id,
+      brandGroupId: brands.groupId,
       brandSlug: brands.slug,
       brandDisplayName: brands.displayName,
       brandWebsite: brands.website,
       brandLogoPath: brands.logoPath,
+      brandBannerPath: brands.bannerPath,
       brandSocials: brands.socials,
     })
     .from(profiles)
@@ -72,6 +81,8 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
   );
 
   return {
+    id: row.profileId,
+    staffId: row.staffId,
     slug: row.slug,
     displayName: row.staffDisplayName,
     jobTitle: row.jobTitle ?? row.staffJobTitle,
@@ -83,10 +94,13 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
     workEmail: row.staffWorkEmail,
     phone: row.staffPhone,
     brand: {
+      id: row.brandId,
+      groupId: row.brandGroupId,
       slug: row.brandSlug,
       displayName: row.brandDisplayName,
       website: row.brandWebsite,
       logoPath: row.brandLogoPath,
+      bannerPath: row.brandBannerPath,
       socials: parseSocialLinks(row.brandSocials),
     },
     theme,

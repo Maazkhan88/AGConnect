@@ -3,16 +3,21 @@ import Link from "next/link";
 import { getDb } from "@/db/client";
 import { brands, profiles, cards, leads } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { countEvents } from "@/lib/admin/analytics";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const admin = await requireAdmin();
   const db = await getDb();
 
-  const [[brandCount], [profileCount], [cardCount], [leadCount]] = await Promise.all([
+  const [[brandCount], [profileCount], [cardCount], [leadCount], qrScans, cardTaps] = await Promise.all([
     db.select({ value: count() }).from(brands).where(eq(brands.groupId, admin.context.groupId)),
     db.select({ value: count() }).from(profiles).where(eq(profiles.status, "PUBLISHED")),
     db.select({ value: count() }).from(cards),
     db.select({ value: count() }).from(leads),
+    countEvents(db, admin.context.groupId, "qr_scan"),
+    countEvents(db, admin.context.groupId, "card_tap"),
   ]);
 
   const metrics: [string, number][] = [
@@ -20,6 +25,8 @@ export default async function AdminPage() {
     ["Published profiles", profileCount.value],
     ["Active cards", cardCount.value],
     ["Leads (all time)", leadCount.value],
+    ["QR scans (all time)", qrScans],
+    ["Card taps (all time)", cardTaps],
   ];
 
   return (

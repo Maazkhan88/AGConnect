@@ -10,10 +10,20 @@ const initialState: FormState = {};
 export function BrandForm({
   brand,
 }: {
-  brand?: { id: string; displayName: string; website: string | null; whatsapp: string | null; socials: SocialLink[] };
+  brand?: {
+    id: string;
+    displayName: string;
+    website: string | null;
+    whatsapp: string | null;
+    socials: SocialLink[];
+    logoPath: string | null;
+    bannerPath: string | null;
+  };
 }) {
   const [state, formAction, pending] = useActionState(createOrUpdateBrandAction, initialState);
   const [socials, setSocials] = useState<SocialLink[]>(brand?.socials ?? []);
+  const [removeLogo, setRemoveLogo] = useState(false);
+  const [removeBanner, setRemoveBanner] = useState(false);
 
   return (
     <form className="form-grid" action={formAction}>
@@ -30,6 +40,51 @@ export function BrandForm({
         WhatsApp link
         <input name="whatsapp" type="url" defaultValue={brand?.whatsapp ?? ""} placeholder="https://wa.me/..." />
       </label>
+
+      <div className="color-row">
+        <label>
+          Logo
+          {brand?.logoPath && !removeLogo ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "6px 0" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={brand.logoPath} alt="" style={{ maxWidth: 80, maxHeight: 50, objectFit: "contain" }} />
+              <button type="button" className="text-link" onClick={() => setRemoveLogo(true)}>
+                Remove
+              </button>
+            </div>
+          ) : removeLogo ? (
+            <p className="muted" style={{ fontSize: 12, margin: "6px 0" }}>
+              Logo will be removed on save.{" "}
+              <button type="button" className="text-link" onClick={() => setRemoveLogo(false)}>
+                Undo
+              </button>
+            </p>
+          ) : null}
+          <input name="logo" type="file" accept="image/jpeg,image/png,image/webp" />
+          {removeLogo && <input type="hidden" name="removeLogo" value="on" />}
+        </label>
+        <label>
+          Banner
+          {brand?.bannerPath && !removeBanner ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "6px 0" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={brand.bannerPath} alt="" style={{ maxWidth: 120, maxHeight: 50, objectFit: "cover", borderRadius: 6 }} />
+              <button type="button" className="text-link" onClick={() => setRemoveBanner(true)}>
+                Remove
+              </button>
+            </div>
+          ) : removeBanner ? (
+            <p className="muted" style={{ fontSize: 12, margin: "6px 0" }}>
+              Banner will be removed on save.{" "}
+              <button type="button" className="text-link" onClick={() => setRemoveBanner(false)}>
+                Undo
+              </button>
+            </p>
+          ) : null}
+          <input name="banner" type="file" accept="image/jpeg,image/png,image/webp" />
+          {removeBanner && <input type="hidden" name="removeBanner" value="on" />}
+        </label>
+      </div>
 
       <div>
         <p style={{ fontWeight: 700, fontSize: 13, margin: "4px 0 8px" }}>Social links</p>

@@ -4,10 +4,13 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Globe2, Mail, MapPin, Phone, UserRoundPlus } from "lucide-react";
 import { ProfileShareButton } from "@/components/profile-share-button";
+import { ShareDetailsButton } from "@/components/share-details-button";
 import { getPublicProfile } from "@/lib/profile";
 import { SOCIAL_LABELS } from "@/lib/brand";
 import { socialIcon, WhatsAppIcon } from "@/lib/social-icons";
 import { themeCssVariables } from "@/lib/theme/theme";
+import { getDb } from "@/db/client";
+import { logAnalyticsEvent } from "@/lib/admin/analytics-events";
 
 export const dynamic = "force-dynamic";
 
@@ -22,10 +25,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function PublicProfile({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PublicProfile({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ src?: string }>;
+}) {
   const { slug } = await params;
+  const { src } = await searchParams;
   const profile = await getPublicProfile(slug);
   if (!profile) notFound();
+
+  if (src === "qr") {
+    const db = await getDb();
+    await logAnalyticsEvent(db, {
+      eventType: "qr_scan",
+      groupId: profile.brand.groupId,
+      brandId: profile.brand.id,
+      staffId: profile.staffId,
+      profileId: profile.id,
+    });
+  }
 
   const style = themeCssVariables(profile.theme) as CSSProperties;
   const whatsapp = profile.brand.socials.find((social) => social.platform === "whatsapp");
@@ -40,7 +61,14 @@ export default async function PublicProfile({ params }: { params: Promise<{ slug
   return (
     <main className="ag-profile-shell" style={style}>
       <article className="ag-profile-card">
-        <header className="network-cover">
+        <header
+          className="network-cover"
+          style={
+            profile.brand.bannerPath
+              ? { backgroundImage: `url(${profile.brand.bannerPath})`, backgroundSize: "cover", backgroundPosition: "center" }
+              : undefined
+          }
+        >
           <div className="network-cover-mark">{profile.brand.displayName.slice(0, 2).toUpperCase()}</div>
           <div className="network-share">
             <ProfileShareButton name={profile.displayName} title={profile.jobTitle} />
@@ -80,6 +108,13 @@ export default async function PublicProfile({ params }: { params: Promise<{ slug
                 <a href={`mailto:${profile.workEmail}`}>Contact info</a>
               </p>
             )}
+            <ShareDetailsButton
+              groupId={profile.brand.groupId}
+              brandId={profile.brand.id}
+              staffId={profile.staffId}
+              profileId={profile.id}
+              staffName={profile.displayName}
+            />
           </div>
           <div className="ag-primary-actions network-actions">
             <a

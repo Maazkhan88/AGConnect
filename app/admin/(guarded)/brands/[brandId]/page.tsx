@@ -32,6 +32,8 @@ export default async function BrandDetailPage({ params }: { params: Promise<{ br
           website: brand.website,
           whatsapp: brand.whatsapp,
           socials: parseSocialLinks(brand.socials),
+          logoPath: brand.logoPath,
+          bannerPath: brand.bannerPath,
         }}
       />
       <h2 style={{ marginTop: 32 }}>Theme</h2>

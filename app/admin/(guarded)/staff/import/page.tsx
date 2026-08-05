@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 import { getDb } from "@/db/client";
 import { brands } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
@@ -23,6 +24,9 @@ export default async function StaffImportPage() {
             attach photos below before publishing — nothing is created until you click Import.
           </p>
         </div>
+        <Link className="text-link" href="/sample-staff-import.csv" download>
+          Download sample CSV
+        </Link>
       </header>
       <ImportClient brandOptions={brandOptions} />
     </>

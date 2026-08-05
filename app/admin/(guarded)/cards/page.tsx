@@ -26,6 +26,7 @@ export default async function CardsPage() {
       cardId: cards.id,
       cardDisplayNumber: cards.displayNumber,
       cardStatus: cards.status,
+      cardNfcToken: cards.nfcToken,
     })
     .from(profiles)
     .innerJoin(staff, eq(staff.id, profiles.staffId))
@@ -34,7 +35,10 @@ export default async function CardsPage() {
     .where(eq(profiles.status, "PUBLISHED"));
 
   const withQr = await Promise.all(
-    rows.map(async (row) => ({ ...row, qr: await qrCodeSvg(`${baseUrl}/p/${row.slug}`) })),
+    // ?src=qr on the encoded URL is what lets a scan of this exact code be
+    // distinguished from someone just clicking the /p/<slug> link elsewhere —
+    // see the qr_scan event logged in app/p/[slug]/page.tsx.
+    rows.map(async (row) => ({ ...row, qr: await qrCodeSvg(`${baseUrl}/p/${row.slug}?src=qr`) })),
   );
 
   return (
@@ -75,9 +79,16 @@ export default async function CardsPage() {
                 </td>
                 <td>
                   {row.cardId ? (
-                    <span className="pill">
-                      {row.cardDisplayNumber} · {row.cardStatus}
-                    </span>
+                    <div>
+                      <span className="pill">
+                        {row.cardDisplayNumber} · {row.cardStatus}
+                      </span>
+                      <p className="muted" style={{ fontSize: 11, margin: "4px 0 0", wordBreak: "break-all" }}>
+                        Program the NFC tag to open:
+                        <br />
+                        {baseUrl}/c/{row.cardNfcToken}
+                      </p>
+                    </div>
                   ) : (
                     <IssueCardButton profileId={row.profileId} />
                   )}

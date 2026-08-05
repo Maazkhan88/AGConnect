@@ -11,7 +11,7 @@ import { generateTempPassword, hashPassword } from "@/lib/auth/password";
 import { logAudit } from "@/lib/admin/audit";
 import { slugify, socialLinksSchema, type SocialLink } from "@/lib/brand";
 import { themeSchema } from "@/lib/theme/theme";
-import { uploadProfilePhoto } from "@/lib/storage";
+import { uploadBrandAsset, uploadProfilePhoto } from "@/lib/storage";
 import { createStaffAndProfile, type NewStaffInput } from "@/lib/admin/create-staff";
 
 export type FormState = { error?: string; ok?: boolean };
@@ -42,16 +42,65 @@ export async function createOrUpdateBrandAction(_prev: FormState, formData: Form
   const db = await getDb();
   const socials = parseSocialRows(formData);
 
+  const logoFile = formData.get("logo");
+  const bannerFile = formData.get("banner");
+  const removeLogo = formData.get("removeLogo") === "on";
+  const removeBanner = formData.get("removeBanner") === "on";
+
   if (brandId) {
+    const existing = await db.query.brands.findFirst({ where: eq(brands.id, brandId) });
+    if (!existing) return { error: "Brand not found." };
+
+    let logoPath = existing.logoPath;
+    if (logoFile instanceof File && logoFile.size > 0) {
+      try {
+        logoPath = await uploadBrandAsset(logoFile, brandId, "logo");
+      } catch (error) {
+        return { error: error instanceof Error ? error.message : "Could not upload logo." };
+      }
+    } else if (removeLogo) {
+      logoPath = null;
+    }
+
+    let bannerPath = existing.bannerPath;
+    if (bannerFile instanceof File && bannerFile.size > 0) {
+      try {
+        bannerPath = await uploadBrandAsset(bannerFile, brandId, "banner");
+      } catch (error) {
+        return { error: error instanceof Error ? error.message : "Could not upload banner." };
+      }
+    } else if (removeBanner) {
+      bannerPath = null;
+    }
+
     await db
       .update(brands)
-      .set({ displayName, name: displayName, website, whatsapp, socials: JSON.stringify(socials), updatedAt: Date.now() })
+      .set({
+        displayName,
+        name: displayName,
+        website,
+        whatsapp,
+        logoPath,
+        bannerPath,
+        socials: JSON.stringify(socials),
+        updatedAt: Date.now(),
+      })
       .where(eq(brands.id, brandId));
     await logAudit({ groupId: admin.context.groupId, brandId, actorId: admin.user.id, action: "brand.update", entityType: "Brand", entityId: brandId });
   } else {
     const id = crypto.randomUUID();
     const slug = slugify(displayName);
     const now = Date.now();
+
+    let logoPath: string | null = null;
+    let bannerPath: string | null = null;
+    try {
+      if (logoFile instanceof File) logoPath = await uploadBrandAsset(logoFile, id, "logo");
+      if (bannerFile instanceof File) bannerPath = await uploadBrandAsset(bannerFile, id, "banner");
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Could not upload image." };
+    }
+
     await db.insert(brands).values({
       id,
       groupId: admin.context.groupId,
@@ -60,7 +109,8 @@ export async function createOrUpdateBrandAction(_prev: FormState, formData: Form
       slug,
       website,
       whatsapp,
-      logoPath: null,
+      logoPath,
+      bannerPath,
       socials: JSON.stringify(socials),
       status: "ACTIVE",
       createdAt: now,

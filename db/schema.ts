@@ -37,6 +37,7 @@ export const brands = sqliteTable(
     phone: text("phone"),
     whatsapp: text("whatsapp"),
     logoPath: text("logo_path"),
+    bannerPath: text("banner_path"),
     /** JSON array of `{ platform, url }` — see `lib/brand.ts`. */
     socials: text("socials").notNull().default("[]"),
     defaultLanguage: text("default_language").notNull().default("en"),
