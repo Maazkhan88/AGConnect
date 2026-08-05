@@ -1,0 +1,3 @@
+import {describe,expect,it} from "vitest";import {can,type AuthorizationContext} from "../lib/auth/permissions";
+const context:AuthorizationContext={groupId:"g1",brandIds:new Set(["b1"]),permissions:new Set(["brand.read","brand.update"])};
+describe("tenant authorization",()=>{it("allows assigned brand operations",()=>expect(can(context,"brand.update",{groupId:"g1",brandId:"b1"})).toBe(true));it("denies another brand",()=>expect(can(context,"brand.read",{groupId:"g1",brandId:"b2"})).toBe(false));it("denies another group",()=>expect(can(context,"brand.read",{groupId:"g2",brandId:"b1"})).toBe(false));it("requires the permission",()=>expect(can(context,"brand.archive",{groupId:"g1",brandId:"b1"})).toBe(false))});

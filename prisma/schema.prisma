@@ -1,0 +1,442 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RecordStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum ProfileStatus {
+  DRAFT
+  PENDING
+  PUBLISHED
+  SUSPENDED
+  ARCHIVED
+}
+
+enum ThemeVersionStatus {
+  DRAFT
+  PUBLISHED
+  SUPERSEDED
+}
+
+enum CardStatus {
+  UNASSIGNED
+  ASSIGNED
+  ACTIVE
+  SUSPENDED
+  LOST
+  DAMAGED
+  REPLACED
+  RETIRED
+}
+
+enum LeadStatus {
+  NEW
+  VIEWED
+  CONTACTED
+  QUALIFIED
+  OPPORTUNITY
+  CONVERTED
+  CLOSED
+  SPAM
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  passwordHash  String?
+  emailVerified DateTime?
+  suspendedAt   DateTime?
+  sessions      Session[]
+  roleScopes    UserBrandRole[]
+  staff         Staff?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+model OrganizationGroup {
+  id         String       @id @default(cuid())
+  name       String
+  slug       String       @unique
+  status     RecordStatus @default(ACTIVE)
+  brands     Brand[]
+  roles      Role[]
+  staff      Staff[]
+  themes     BrandTheme[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  archivedAt DateTime?
+}
+
+model Brand {
+  id                 String             @id @default(cuid())
+  groupId            String
+  group              OrganizationGroup  @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  name               String
+  legalName          String?
+  displayName        String
+  shortName          String?
+  slug               String
+  website            String?
+  email              String?
+  phone              String?
+  whatsapp           String?
+  defaultLanguage    String             @default("en")
+  supportedLanguages String[]           @default(["en", "ar"])
+  status             RecordStatus       @default(ACTIVE)
+  translations       BrandTranslation[]
+  themes             BrandTheme[]
+  departments        Department[]
+  teams              Team[]
+  staffBrands        StaffBrand[]
+  profiles           Profile[]
+  cards              Card[]
+  leads              Lead[]
+  roleScopes         UserBrandRole[]
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  archivedAt         DateTime?
+  @@unique([groupId, slug])
+  @@index([groupId, status])
+}
+
+model BrandTranslation {
+  id              String @id @default(cuid())
+  brandId         String
+  brand           Brand  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  locale          String
+  description     String?
+  address         String?
+  legalDisclaimer String?
+  @@unique([brandId, locale])
+}
+
+model BrandTheme {
+  id        String              @id @default(cuid())
+  groupId   String
+  group     OrganizationGroup   @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  brandId   String?
+  brand     Brand?              @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  name      String
+  values    Json
+  versions  BrandThemeVersion[]
+  locks     BrandThemeLock[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  @@index([groupId, brandId])
+}
+
+model BrandThemeVersion {
+  id          String             @id @default(cuid())
+  themeId     String
+  theme       BrandTheme         @relation(fields: [themeId], references: [id], onDelete: Restrict)
+  version     Int
+  status      ThemeVersionStatus @default(DRAFT)
+  values      Json
+  publishedAt DateTime?
+  createdAt   DateTime           @default(now())
+  @@unique([themeId, version])
+}
+
+model BrandThemeLock {
+  id         String     @id @default(cuid())
+  themeId    String
+  theme      BrandTheme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  property   String
+  lockedById String
+  createdAt  DateTime   @default(now())
+  @@unique([themeId, property])
+}
+
+model Department {
+  id          String       @id @default(cuid())
+  brandId     String
+  brand       Brand        @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  nameEn      String
+  nameAr      String?
+  status      RecordStatus @default(ACTIVE)
+  staffBrands StaffBrand[]
+  teams       Team[]
+  @@unique([brandId, nameEn])
+}
+
+model Team {
+  id           String       @id @default(cuid())
+  brandId      String
+  brand        Brand        @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  departmentId String?
+  department   Department?  @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  nameEn       String
+  nameAr       String?
+  status       RecordStatus @default(ACTIVE)
+  members      StaffTeam[]
+  @@unique([brandId, nameEn])
+}
+
+model Staff {
+  id             String             @id @default(cuid())
+  groupId        String
+  group          OrganizationGroup  @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  userId         String?            @unique
+  user           User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  employeeNumber String
+  firstName      String
+  lastName       String
+  displayName    String
+  workEmail      String
+  jobTitleEn     String
+  jobTitleAr     String?
+  status         RecordStatus       @default(ACTIVE)
+  brands         StaffBrand[]
+  teams          StaffTeam[]
+  profile        Profile?
+  assignments    CardAssignment[]
+  leads          Lead[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  archivedAt     DateTime?
+  @@unique([groupId, employeeNumber])
+  @@unique([groupId, workEmail])
+  @@index([groupId, status])
+}
+
+model StaffBrand {
+  id           String      @id @default(cuid())
+  staffId      String
+  staff        Staff       @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  brandId      String
+  brand        Brand       @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  isPrimary    Boolean     @default(false)
+  joinedAt     DateTime    @default(now())
+  leftAt       DateTime?
+  @@unique([staffId, brandId])
+  @@index([brandId, isPrimary])
+}
+
+model StaffTeam {
+  staffId String
+  staff   Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  teamId  String
+  team    Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  @@id([staffId, teamId])
+}
+
+model Role {
+  id          String            @id @default(cuid())
+  groupId     String
+  group       OrganizationGroup @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  name        String
+  isSystem    Boolean           @default(false)
+  permissions RolePermission[]
+  assignments UserBrandRole[]
+  @@unique([groupId, name])
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  key         String           @unique
+  description String
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  @@id([roleId, permissionId])
+}
+
+model UserBrandRole {
+  id      String  @id @default(cuid())
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brandId String?
+  brand   Brand?  @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  roleId  String
+  role    Role    @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  @@unique([userId, brandId, roleId])
+  @@index([brandId, userId])
+}
+
+model Profile {
+  id           String               @id @default(cuid())
+  publicId     String               @unique @default(cuid())
+  slug         String               @unique
+  staffId      String               @unique
+  staff        Staff                @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  brandId      String
+  brand        Brand                @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  status       ProfileStatus        @default(DRAFT)
+  indexable    Boolean              @default(false)
+  translations ProfileTranslation[]
+  visibility   ProfileVisibility[]
+  cards        Card[]
+  leads        Lead[]
+  publishedAt  DateTime?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+  @@index([brandId, status])
+}
+
+model ProfileTranslation {
+  id        String  @id @default(cuid())
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  locale    String
+  jobTitle  String?
+  biography String?
+  @@unique([profileId, locale])
+}
+
+model ProfileVisibility {
+  id        String  @id @default(cuid())
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  field     String
+  isPublic  Boolean @default(true)
+  @@unique([profileId, field])
+}
+
+model Card {
+  id            String           @id @default(cuid())
+  publicId      String           @unique @default(cuid())
+  brandId       String
+  brand         Brand            @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  profileId     String?
+  profile       Profile?         @relation(fields: [profileId], references: [id], onDelete: SetNull)
+  displayNumber String
+  nfcToken      String           @unique
+  status        CardStatus       @default(UNASSIGNED)
+  assignments   CardAssignment[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  @@unique([brandId, displayNumber])
+  @@index([brandId, status])
+}
+
+model CardAssignment {
+  id           String    @id @default(cuid())
+  cardId       String
+  card         Card      @relation(fields: [cardId], references: [id], onDelete: Restrict)
+  staffId      String
+  staff        Staff     @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  assignedById String
+  assignedAt   DateTime  @default(now())
+  unassignedAt DateTime?
+  @@index([cardId, unassignedAt])
+  @@index([staffId, unassignedAt])
+}
+
+model Lead {
+  id         String     @id @default(cuid())
+  publicId   String     @unique @default(cuid())
+  brandId    String
+  brand      Brand      @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  staffId    String
+  staff      Staff      @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  profileId  String
+  profile    Profile    @relation(fields: [profileId], references: [id], onDelete: Restrict)
+  status     LeadStatus @default(NEW)
+  fullName   String
+  email      String?
+  phone      String?
+  consentAt  DateTime
+  activities LeadActivity[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  @@index([brandId, status, createdAt])
+  @@index([staffId, status])
+}
+
+model LeadActivity {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Restrict)
+  kind      String
+  metadata  Json?
+  actorId   String?
+  createdAt DateTime @default(now())
+  @@index([leadId, createdAt])
+}
+
+model AnalyticsEvent {
+  id             String   @id @default(cuid())
+  occurredAt     DateTime @default(now())
+  eventType      String
+  groupId        String
+  brandId        String?
+  staffId        String?
+  profileId      String?
+  cardId         String?
+  sessionHash    String?
+  locale         String?
+  deviceCategory String?
+  countryCode    String?
+  metadata       Json?
+  @@index([groupId, occurredAt])
+  @@index([brandId, eventType, occurredAt])
+  @@index([profileId, eventType, occurredAt])
+}
+
+model ApprovalRequest {
+  id              String   @id @default(cuid())
+  publicId        String   @unique @default(cuid())
+  groupId         String
+  brandId         String
+  entityType      String
+  entityId        String
+  field           String
+  previousValue   Json?
+  proposedValue   Json
+  requestedById   String
+  reviewerId      String?
+  status          String   @default("PENDING")
+  rejectionReason String?
+  requestedAt     DateTime @default(now())
+  reviewedAt      DateTime?
+  @@index([brandId, status, requestedAt])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  groupId        String
+  brandId        String?
+  actorId        String?
+  action         String
+  entityType     String
+  entityId       String
+  metadata       Json?
+  previousValues Json?
+  newValues      Json?
+  createdAt      DateTime @default(now())
+  @@index([groupId, createdAt])
+  @@index([brandId, createdAt])
+}
