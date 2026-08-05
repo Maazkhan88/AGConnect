@@ -11,6 +11,7 @@ import { generateTempPassword, hashPassword } from "@/lib/auth/password";
 import { logAudit } from "@/lib/admin/audit";
 import { slugify, socialLinksSchema, type SocialLink } from "@/lib/brand";
 import { themeSchema } from "@/lib/theme/theme";
+import { uploadProfilePhoto } from "@/lib/storage";
 
 export type FormState = { error?: string; ok?: boolean };
 
@@ -175,6 +176,16 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
     slug = `${base}-${suffix}`;
   }
 
+  const photoFile = formData.get("photo");
+  let photoPath: string | null = null;
+  if (photoFile instanceof File && photoFile.size > 0) {
+    try {
+      photoPath = await uploadProfilePhoto(photoFile, staffId);
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Could not upload photo." };
+    }
+  }
+
   const profileId = crypto.randomUUID();
   await db.insert(profiles).values({
     id: profileId,
@@ -185,6 +196,7 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
     status: "PUBLISHED",
     indexable: false,
     jobTitle: jobTitle || "Team Member",
+    photoPath,
     createdAt: now,
     updatedAt: now,
     publishedAt: now,
@@ -258,6 +270,42 @@ export async function inviteAdminAction(_prev: InviteAdminState, formData: FormD
   revalidatePath("/admin/staff");
   // The temp password is shown once, here, and never stored in plaintext or logged elsewhere.
   return { ok: true, tempPassword, email };
+}
+
+export type ResetAdminPasswordState = FormState & { tempPassword?: string; email?: string };
+
+export async function resetAdminPasswordAction(
+  _prev: ResetAdminPasswordState,
+  formData: FormData,
+): Promise<ResetAdminPasswordState> {
+  const admin = await requireAdmin();
+  assertCan(admin.context, "group.manage", { groupId: admin.context.groupId });
+
+  const adminUserId = String(formData.get("adminUserId") ?? "");
+  if (!adminUserId) return { error: "Missing admin user." };
+
+  const db = await getDb();
+  const target = await db.query.adminUsers.findFirst({ where: eq(adminUsers.id, adminUserId) });
+  if (!target) return { error: "Admin not found." };
+
+  const tempPassword = generateTempPassword();
+  await db
+    .update(adminUsers)
+    .set({ passwordHash: await hashPassword(tempPassword), updatedAt: Date.now() })
+    .where(eq(adminUsers.id, adminUserId));
+
+  await logAudit({
+    groupId: admin.context.groupId,
+    actorId: admin.user.id,
+    action: "admin.reset_password",
+    entityType: "AdminUser",
+    entityId: adminUserId,
+    metadata: { email: target.email },
+  });
+
+  revalidatePath("/admin/staff");
+  // Same one-time-display pattern as invite: never stored in plaintext or logged elsewhere.
+  return { ok: true, tempPassword, email: target.email };
 }
 
 export async function revokeAdminAction(formData: FormData): Promise<void> {

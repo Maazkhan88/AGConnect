@@ -33,6 +33,10 @@ export function StaffForm({ brandOptions }: { brandOptions: { id: string; displa
         <input name="phone" placeholder="+9715..." />
       </label>
       <label>
+        Photo
+        <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" />
+      </label>
+      <label>
         Brand
         <select name="brandId" required defaultValue="">
           <option value="" disabled>

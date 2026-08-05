@@ -20,6 +20,9 @@ export default function AdminLoginPage() {
         <input id="email" name="email" type="email" required autoComplete="username" />
         <label htmlFor="password">Password</label>
         <input id="password" name="password" type="password" required autoComplete="current-password" />
+        <p className="muted" style={{ fontSize: 12, margin: "-2px 0 0" }}>
+          Forgot your password? Ask a super-admin to reset it from Admin → Staff → Admin access.
+        </p>
         {state.error && <p className="login-error">{state.error}</p>}
         <button className="button" type="submit" disabled={pending}>
           {pending ? "Signing in…" : "Sign in"}

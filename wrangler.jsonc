@@ -20,6 +20,12 @@
       "migrations_dir": "drizzle"
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "UPLOADS",
+      "bucket_name": "agconnect-uploads"
+    }
+  ],
   "observability": { "enabled": true },
   // Works around a known opennextjs-cloudflare + pnpm bug where Next.js's
   // getMiddlewareManifest() does a dynamic require() of middleware-manifest.json,
