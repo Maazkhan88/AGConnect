@@ -16,9 +16,16 @@
     {
       "binding": "DB",
       "database_name": "agconnect-db",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "database_id": "3523e9bf-cd29-4163-bb86-0fc956e94072",
       "migrations_dir": "drizzle"
     }
   ],
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // Works around a known opennextjs-cloudflare + pnpm bug where Next.js's
+  // getMiddlewareManifest() does a dynamic require() of middleware-manifest.json,
+  // which workerd can't resolve (github.com/opennextjs/opennextjs-cloudflare#922).
+  // NEXT_PRIVATE_MINIMAL_MODE skips that code path.
+  "vars": {
+    "NEXT_PRIVATE_MINIMAL_MODE": "1"
+  }
 }

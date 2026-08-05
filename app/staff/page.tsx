@@ -2,6 +2,8 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { profiles, cards } from "@/db/schema";
 
+export const dynamic = "force-dynamic";
+
 /**
  * Minimal "my workspace" view. There is no staff self-login yet (only the admin
  * panel has authentication) — this reads the seeded Maaz Khan profile as a
