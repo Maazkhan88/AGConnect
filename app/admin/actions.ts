@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db/client";
-import { adminUsers, brands, brandThemes, profiles, staff, staffBrands } from "@/db/schema";
+import { adminUsers, brands, brandThemes, cards, profiles, staff, staffBrands } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
 import { assertCan } from "@/lib/auth/permissions";
 import { generateTempPassword, hashPassword } from "@/lib/auth/password";
@@ -12,6 +12,7 @@ import { logAudit } from "@/lib/admin/audit";
 import { slugify, socialLinksSchema, type SocialLink } from "@/lib/brand";
 import { themeSchema } from "@/lib/theme/theme";
 import { uploadProfilePhoto } from "@/lib/storage";
+import { createStaffAndProfile, type NewStaffInput } from "@/lib/admin/create-staff";
 
 export type FormState = { error?: string; ok?: boolean };
 
@@ -139,68 +140,19 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
   assertCan(admin.context, "staff.create", { groupId: admin.context.groupId, brandId });
 
   const db = await getDb();
-  const displayName = `${firstName} ${lastName}`;
-  const staffId = crypto.randomUUID();
-  const now = Date.now();
-
-  await db.insert(staff).values({
-    id: staffId,
-    groupId: admin.context.groupId,
-    userId: null,
-    employeeNumber: `AGH-${now.toString().slice(-6)}`,
-    firstName,
-    lastName,
-    displayName,
-    workEmail,
-    jobTitleEn: jobTitle || "Team Member",
-    phone,
-    status: "ACTIVE",
-    createdAt: now,
-    updatedAt: now,
-  });
-
-  await db.insert(staffBrands).values({
-    id: crypto.randomUUID(),
-    staffId,
-    brandId,
-    isPrimary: true,
-    joinedAt: now,
-  });
-
-  // Generate a unique, permanent public slug — this is what makes the profile visible at /p/<slug>.
-  const base = slugify(displayName) || "team-member";
-  let slug = base;
-  let suffix = 1;
-  while (await db.query.profiles.findFirst({ where: eq(profiles.slug, slug) })) {
-    suffix += 1;
-    slug = `${base}-${suffix}`;
-  }
-
   const photoFile = formData.get("photo");
-  let photoPath: string | null = null;
-  if (photoFile instanceof File && photoFile.size > 0) {
-    try {
-      photoPath = await uploadProfilePhoto(photoFile, staffId);
-    } catch (error) {
-      return { error: error instanceof Error ? error.message : "Could not upload photo." };
-    }
-  }
 
-  const profileId = crypto.randomUUID();
-  await db.insert(profiles).values({
-    id: profileId,
-    publicId: crypto.randomUUID(),
-    slug,
-    staffId,
-    brandId,
-    status: "PUBLISHED",
-    indexable: false,
-    jobTitle: jobTitle || "Team Member",
-    photoPath,
-    createdAt: now,
-    updatedAt: now,
-    publishedAt: now,
-  });
+  let result: { slug: string };
+  try {
+    result = await createStaffAndProfile(
+      db,
+      admin.context.groupId,
+      { firstName, lastName, workEmail, jobTitle, phone, brandId },
+      photoFile instanceof File ? photoFile : null,
+    );
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Could not create staff member." };
+  }
 
   await logAudit({
     groupId: admin.context.groupId,
@@ -208,12 +160,144 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
     actorId: admin.user.id,
     action: "staff.create",
     entityType: "Staff",
-    entityId: staffId,
-    metadata: { profileSlug: slug },
+    entityId: result.slug,
+    metadata: { profileSlug: result.slug },
   });
 
   revalidatePath("/admin/staff");
-  redirect(`/admin/staff?created=${slug}`);
+  redirect(`/admin/staff?created=${result.slug}`);
+}
+
+export async function updateStaffAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  const admin = await requireAdmin();
+  const staffId = String(formData.get("staffId") ?? "");
+  const firstName = String(formData.get("firstName") ?? "").trim();
+  const lastName = String(formData.get("lastName") ?? "").trim();
+  const workEmail = String(formData.get("workEmail") ?? "").trim().toLowerCase();
+  const jobTitle = String(formData.get("jobTitle") ?? "").trim();
+  const brandId = String(formData.get("brandId") ?? "");
+  const phone = String(formData.get("phone") ?? "").trim() || null;
+  const removePhoto = formData.get("removePhoto") === "on";
+  if (!staffId || !firstName || !lastName || !workEmail || !brandId) {
+    return { error: "Name, work email, and brand are required." };
+  }
+
+  assertCan(admin.context, "staff.update", { groupId: admin.context.groupId, brandId });
+
+  const db = await getDb();
+  const existingProfile = await db.query.profiles.findFirst({ where: eq(profiles.staffId, staffId) });
+  if (!existingProfile) return { error: "Staff member not found." };
+
+  const now = Date.now();
+  await db
+    .update(staff)
+    .set({
+      firstName,
+      lastName,
+      displayName: `${firstName} ${lastName}`,
+      workEmail,
+      jobTitleEn: jobTitle || "Team Member",
+      phone,
+      updatedAt: now,
+    })
+    .where(eq(staff.id, staffId));
+
+  // This app's flow keeps one brand membership per staff member — update it in place
+  // rather than delete/insert, so joinedAt history is preserved.
+  if (brandId !== existingProfile.brandId) {
+    await db.update(staffBrands).set({ brandId }).where(eq(staffBrands.staffId, staffId));
+  }
+
+  const photoFile = formData.get("photo");
+  let photoPath = existingProfile.photoPath;
+  if (photoFile instanceof File && photoFile.size > 0) {
+    try {
+      photoPath = await uploadProfilePhoto(photoFile, staffId);
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : "Could not upload photo." };
+    }
+  } else if (removePhoto) {
+    photoPath = null;
+  }
+
+  await db
+    .update(profiles)
+    .set({ brandId, jobTitle: jobTitle || "Team Member", photoPath, updatedAt: now })
+    .where(eq(profiles.staffId, staffId));
+
+  await logAudit({
+    groupId: admin.context.groupId,
+    brandId,
+    actorId: admin.user.id,
+    action: "staff.update",
+    entityType: "Staff",
+    entityId: staffId,
+    metadata: { profileSlug: existingProfile.slug },
+  });
+
+  revalidatePath("/admin/staff");
+  redirect(`/admin/staff?updated=${existingProfile.slug}`);
+}
+
+// ---------------------------------------------------------------------------
+// Bulk CSV import — reuses createStaffAndProfile so every row goes through the
+// exact same validation/slug/photo logic as the single "new staff" form.
+// Rows are submitted as JSON (already reviewed/edited client-side in
+// app/admin/(guarded)/staff/import/import-client.tsx) plus optional per-row
+// photo files keyed "photo_<rowId>".
+// ---------------------------------------------------------------------------
+
+export type BulkImportResult = {
+  rowId: string;
+  ok: boolean;
+  slug?: string;
+  error?: string;
+};
+
+export async function bulkImportStaffAction(formData: FormData): Promise<BulkImportResult[]> {
+  const admin = await requireAdmin();
+  const db = await getDb();
+
+  const rowsJson = String(formData.get("rows") ?? "[]");
+  let rows: (NewStaffInput & { rowId: string })[];
+  try {
+    rows = JSON.parse(rowsJson);
+  } catch {
+    return [{ rowId: "_all", ok: false, error: "Malformed import payload." }];
+  }
+
+  const results: BulkImportResult[] = [];
+  for (const row of rows) {
+    if (!row.firstName || !row.lastName || !row.workEmail || !row.brandId) {
+      results.push({ rowId: row.rowId, ok: false, error: "Missing required field." });
+      continue;
+    }
+    try {
+      assertCan(admin.context, "staff.create", { groupId: admin.context.groupId, brandId: row.brandId });
+      const photoFile = formData.get(`photo_${row.rowId}`);
+      const { slug } = await createStaffAndProfile(
+        db,
+        admin.context.groupId,
+        row,
+        photoFile instanceof File ? photoFile : null,
+      );
+      await logAudit({
+        groupId: admin.context.groupId,
+        brandId: row.brandId,
+        actorId: admin.user.id,
+        action: "staff.create",
+        entityType: "Staff",
+        entityId: slug,
+        metadata: { profileSlug: slug, via: "bulk_import" },
+      });
+      results.push({ rowId: row.rowId, ok: true, slug });
+    } catch (error) {
+      results.push({ rowId: row.rowId, ok: false, error: error instanceof Error ? error.message : "Failed." });
+    }
+  }
+
+  revalidatePath("/admin/staff");
+  return results;
 }
 
 // ---------------------------------------------------------------------------
@@ -330,4 +414,51 @@ export async function revokeAdminAction(formData: FormData): Promise<void> {
   });
 
   revalidatePath("/admin/staff");
+}
+
+// ---------------------------------------------------------------------------
+// Cards & QR — every published profile gets a QR code for free (it's just an
+// encoding of its public URL, see lib/qr.ts); a physical NFC card is a
+// separate thing you issue on top of that.
+// ---------------------------------------------------------------------------
+
+export async function issueCardAction(profileId: string): Promise<void> {
+  const admin = await requireAdmin();
+  const db = await getDb();
+
+  const profile = await db.query.profiles.findFirst({ where: eq(profiles.id, profileId) });
+  if (!profile) return;
+
+  assertCan(admin.context, "card.create", { groupId: admin.context.groupId, brandId: profile.brandId });
+
+  const existing = await db.query.cards.findFirst({ where: eq(cards.profileId, profileId) });
+  if (existing) return;
+
+  const now = Date.now();
+  const existingCards = await db.select({ id: cards.id }).from(cards).where(eq(cards.brandId, profile.brandId));
+  const cardId = crypto.randomUUID();
+
+  await db.insert(cards).values({
+    id: cardId,
+    publicId: crypto.randomUUID(),
+    brandId: profile.brandId,
+    profileId,
+    displayNumber: `CARD-${(existingCards.length + 1).toString().padStart(4, "0")}`,
+    nfcToken: crypto.randomUUID(),
+    status: "ASSIGNED",
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  await logAudit({
+    groupId: admin.context.groupId,
+    brandId: profile.brandId,
+    actorId: admin.user.id,
+    action: "card.issue",
+    entityType: "Card",
+    entityId: cardId,
+    metadata: { profileId },
+  });
+
+  revalidatePath("/admin/cards");
 }
