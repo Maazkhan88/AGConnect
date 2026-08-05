@@ -76,9 +76,9 @@ Production still requires: TLS (handled by Cloudflare), a real `AUTH_SECRET` Wor
   ```
   Admin login
     email:    maaz.n.khan@gmail.com
-    password: g7BJD8ZAC3kRhoeoSf   <-- store this now, it is not recoverable
+    password: <randomly generated, printed once>   <-- store this now, it is not recoverable
   ```
 
-  The password shown above (`g7BJD8ZAC3kRhoeoSf`) was generated for the local/dev D1 database as part of building this feature — treat it as already-used dev-only and re-seed with your own `ADMIN_PASSWORD` (or let the script generate a fresh one) before using this in anything resembling production.
+  Never commit a generated password to source control or docs. If one is ever printed and pasted somewhere persistent, treat it as compromised and re-seed with a fresh `ADMIN_PASSWORD` immediately.
 
 Sign in at `/admin/login`, then use **Admin → Staff → "Admin access"** to invite additional admins (Super admin or Brand admin, optionally scoped to one brand) — each invite generates its own one-time temporary password shown once in the UI, and existing admins can be removed (soft-revoked, not deleted) from the same panel. Only accounts with `group.manage` (i.e. `GROUP_ADMIN`) can see or use this panel.
