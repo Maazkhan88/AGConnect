@@ -1,10 +1,12 @@
 import { eq } from "drizzle-orm";
+import Link from "next/link";
 import { getDb } from "@/db/client";
 import { cards, brands, profiles, staff } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
 import { getSiteBaseUrl } from "@/lib/site-url";
-import { qrCodeSvg } from "@/lib/qr";
+import { qrCodeSvg, qrCodeDataUrl } from "@/lib/qr";
 import { IssueCardButton } from "./issue-card-button";
+import { NfcWriteButton } from "@/components/nfc-write-button";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +40,11 @@ export default async function CardsPage() {
     // ?src=qr on the encoded URL is what lets a scan of this exact code be
     // distinguished from someone just clicking the /p/<slug> link elsewhere —
     // see the qr_scan event logged in app/p/[slug]/page.tsx.
-    rows.map(async (row) => ({ ...row, qr: await qrCodeSvg(`${baseUrl}/p/${row.slug}?src=qr`) })),
+    rows.map(async (row) => {
+      const url = `${baseUrl}/p/${row.slug}?src=qr`;
+      const [svg, pngDataUrl] = await Promise.all([qrCodeSvg(url), qrCodeDataUrl(url)]);
+      return { ...row, qr: svg, pngDataUrl };
+    }),
   );
 
   return (
@@ -52,6 +58,11 @@ export default async function CardsPage() {
             ready.
           </p>
         </div>
+        {withQr.length > 0 && (
+          <Link className="button small secondary" href="/admin/cards/export">
+            Export all QR codes
+          </Link>
+        )}
       </header>
       {withQr.length === 0 ? (
         <p className="muted">No published profiles yet.</p>
@@ -60,6 +71,7 @@ export default async function CardsPage() {
           <thead>
             <tr>
               <th>QR</th>
+              <th></th>
               <th>Name</th>
               <th>Brand</th>
               <th>Profile</th>
@@ -70,6 +82,11 @@ export default async function CardsPage() {
             {withQr.map((row) => (
               <tr key={row.profileId}>
                 <td dangerouslySetInnerHTML={{ __html: row.qr }} style={{ width: 48 }} />
+                <td>
+                  <a className="text-link" href={row.pngDataUrl} download={`${row.slug}-qr.png`}>
+                    Download
+                  </a>
+                </td>
                 <td>{row.displayName}</td>
                 <td>{row.brandName ?? "—"}</td>
                 <td>
@@ -88,6 +105,7 @@ export default async function CardsPage() {
                         <br />
                         {baseUrl}/c/{row.cardNfcToken}
                       </p>
+                      <NfcWriteButton url={`${baseUrl}/c/${row.cardNfcToken}`} />
                     </div>
                   ) : (
                     <IssueCardButton profileId={row.profileId} />

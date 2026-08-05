@@ -43,9 +43,9 @@ export function ShareDetailsButton({
       <input type="hidden" name="brandId" value={brandId} />
       <input type="hidden" name="staffId" value={staffId} />
       <input type="hidden" name="profileId" value={profileId} />
-      <input name="fullName" placeholder="Your name" required style={{ padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }} />
-      <input name="email" type="email" placeholder="Email" style={{ padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }} />
-      <input name="phone" placeholder="Phone" style={{ padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }} />
+      <input name="fullName" placeholder="Your name" required style={{ width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }} />
+      <input name="email" type="email" placeholder="Email" style={{ width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }} />
+      <input name="phone" placeholder="Phone" style={{ width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }} />
       <label style={{ fontSize: 12, display: "flex", gap: 6, alignItems: "flex-start" }}>
         <input type="checkbox" name="consent" required style={{ marginTop: 2 }} />
         <span>I agree to be contacted by {staffName.split(" ")[0]} using these details.</span>
