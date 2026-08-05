@@ -44,6 +44,15 @@ export async function hashPassword(password: string): Promise<string> {
   return `pbkdf2$${PBKDF2_ITERATIONS}$${toBase64Url(salt)}$${digest}`;
 }
 
+const PASSWORD_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+/** Cryptographically-random temporary password, e.g. for a freshly invited admin. */
+export function generateTempPassword(length = 18): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(length)))
+    .map((byte) => PASSWORD_ALPHABET[byte % PASSWORD_ALPHABET.length])
+    .join("");
+}
+
 export async function verifyPassword(password: string, stored: string): Promise<boolean> {
   const [scheme, iterations, salt, digest] = stored.split("$");
   if (scheme !== "pbkdf2" || !iterations || !salt || !digest) return false;

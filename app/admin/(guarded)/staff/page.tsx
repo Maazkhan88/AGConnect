@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db/client";
-import { staff, profiles, brands, staffBrands } from "@/db/schema";
+import { staff, profiles, brands, staffBrands, adminUsers } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { can } from "@/lib/auth/permissions";
+import { AdminUsersPanel, type AdminUserRowView } from "./admin-users-panel";
 
 export default async function StaffListPage({ searchParams }: { searchParams: Promise<{ created?: string }> }) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const { created } = await searchParams;
   const db = await getDb();
 
@@ -23,6 +25,27 @@ export default async function StaffListPage({ searchParams }: { searchParams: Pr
     .leftJoin(staffBrands, eq(staffBrands.staffId, staff.id))
     .leftJoin(brands, eq(brands.id, staffBrands.brandId))
     .leftJoin(profiles, eq(profiles.staffId, staff.id));
+
+  // "group.manage" is only held by GROUP_ADMIN (see lib/auth/current-user.ts) — the
+  // super-admin permission that gates who can invite/remove other admins.
+  const canManageAdmins = can(admin.context, "group.manage", { groupId: admin.context.groupId });
+  let adminRows: AdminUserRowView[] = [];
+  let brandOptions: { id: string; displayName: string }[] = [];
+  if (canManageAdmins) {
+    const [adminList, brandList] = await Promise.all([
+      db.select().from(adminUsers).where(eq(adminUsers.groupId, admin.context.groupId)),
+      db.select({ id: brands.id, displayName: brands.displayName }).from(brands).where(eq(brands.groupId, admin.context.groupId)),
+    ]);
+    adminRows = adminList.map((row) => ({
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      role: row.role,
+      status: row.status,
+      isSelf: row.id === admin.user.id,
+    }));
+    brandOptions = brandList;
+  }
 
   return (
     <>
@@ -69,6 +92,7 @@ export default async function StaffListPage({ searchParams }: { searchParams: Pr
           ))}
         </tbody>
       </table>
+      {canManageAdmins && <AdminUsersPanel admins={adminRows} brandOptions={brandOptions} />}
     </>
   );
 }

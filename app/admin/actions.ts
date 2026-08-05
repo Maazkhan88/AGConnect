@@ -4,9 +4,10 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getDb } from "@/db/client";
-import { brands, brandThemes, profiles, staff, staffBrands } from "@/db/schema";
+import { adminUsers, brands, brandThemes, profiles, staff, staffBrands } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
 import { assertCan } from "@/lib/auth/permissions";
+import { generateTempPassword, hashPassword } from "@/lib/auth/password";
 import { logAudit } from "@/lib/admin/audit";
 import { slugify, socialLinksSchema, type SocialLink } from "@/lib/brand";
 import { themeSchema } from "@/lib/theme/theme";
@@ -201,4 +202,84 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
 
   revalidatePath("/admin/staff");
   redirect(`/admin/staff?created=${slug}`);
+}
+
+// ---------------------------------------------------------------------------
+// Admin-user management (invite / revoke) — gated to super-admins (GROUP_ADMIN,
+// the only role that holds "group.manage") via can()/assertCan(). Reuses the
+// same session/password stack as the login flow — no parallel auth system.
+// ---------------------------------------------------------------------------
+
+export type InviteAdminState = FormState & { tempPassword?: string; email?: string };
+
+export async function inviteAdminAction(_prev: InviteAdminState, formData: FormData): Promise<InviteAdminState> {
+  const admin = await requireAdmin();
+  assertCan(admin.context, "group.manage", { groupId: admin.context.groupId });
+
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const role = String(formData.get("role") ?? "BRAND_ADMIN");
+  const brandId = String(formData.get("brandId") ?? "");
+  if (!name || !email) return { error: "Name and email are required." };
+  if (role !== "GROUP_ADMIN" && role !== "BRAND_ADMIN") return { error: "Invalid role." };
+
+  const db = await getDb();
+  const existing = await db.query.adminUsers.findFirst({ where: eq(adminUsers.email, email) });
+  if (existing) return { error: "An admin with this email already exists." };
+
+  const tempPassword = generateTempPassword();
+  const now = Date.now();
+  const id = crypto.randomUUID();
+
+  await db.insert(adminUsers).values({
+    id,
+    groupId: admin.context.groupId,
+    email,
+    name,
+    passwordHash: await hashPassword(tempPassword),
+    role,
+    // BRAND_ADMIN scoped to one brand if chosen; empty array = every brand in the group.
+    brandIds: role === "BRAND_ADMIN" && brandId ? JSON.stringify([brandId]) : "[]",
+    status: "ACTIVE",
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  await logAudit({
+    groupId: admin.context.groupId,
+    brandId: role === "BRAND_ADMIN" ? brandId || null : null,
+    actorId: admin.user.id,
+    action: "admin.invite",
+    entityType: "AdminUser",
+    entityId: id,
+    metadata: { email, role },
+  });
+
+  revalidatePath("/admin/staff");
+  // The temp password is shown once, here, and never stored in plaintext or logged elsewhere.
+  return { ok: true, tempPassword, email };
+}
+
+export async function revokeAdminAction(formData: FormData): Promise<void> {
+  const admin = await requireAdmin();
+  assertCan(admin.context, "group.manage", { groupId: admin.context.groupId });
+
+  const adminUserId = String(formData.get("adminUserId") ?? "");
+  if (!adminUserId) return;
+  if (adminUserId === admin.user.id) return; // cannot revoke yourself
+
+  const db = await getDb();
+  // Soft-revoke — consistent with the rest of the app's status-column pattern
+  // (staff.status, profiles.status, brands.status) rather than a hard delete.
+  await db.update(adminUsers).set({ status: "SUSPENDED", updatedAt: Date.now() }).where(eq(adminUsers.id, adminUserId));
+
+  await logAudit({
+    groupId: admin.context.groupId,
+    actorId: admin.user.id,
+    action: "admin.revoke",
+    entityType: "AdminUser",
+    entityId: adminUserId,
+  });
+
+  revalidatePath("/admin/staff");
 }
