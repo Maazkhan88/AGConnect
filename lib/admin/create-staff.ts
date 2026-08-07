@@ -10,6 +10,7 @@ export type NewStaffInput = {
   workEmail: string;
   jobTitle: string;
   phone: string | null;
+  whatsapp: string | null;
   brandId: string;
 };
 
@@ -40,6 +41,7 @@ export async function createStaffAndProfile(
     workEmail: input.workEmail,
     jobTitleEn: input.jobTitle || "Team Member",
     phone: input.phone,
+    whatsapp: input.whatsapp,
     status: "ACTIVE",
     createdAt: now,
     updatedAt: now,

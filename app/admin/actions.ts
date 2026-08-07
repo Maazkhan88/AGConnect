@@ -183,6 +183,7 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
   const jobTitle = String(formData.get("jobTitle") ?? "").trim();
   const brandId = String(formData.get("brandId") ?? "");
   const phone = String(formData.get("phone") ?? "").trim() || null;
+  const whatsapp = String(formData.get("whatsapp") ?? "").trim() || null;
   if (!firstName || !lastName || !workEmail || !brandId) {
     return { error: "Name, work email, and brand are required." };
   }
@@ -197,7 +198,7 @@ export async function createStaffAction(_prev: FormState, formData: FormData): P
     result = await createStaffAndProfile(
       db,
       admin.context.groupId,
-      { firstName, lastName, workEmail, jobTitle, phone, brandId },
+      { firstName, lastName, workEmail, jobTitle, phone, whatsapp, brandId },
       photoFile instanceof File ? photoFile : null,
     );
   } catch (error) {
@@ -227,6 +228,7 @@ export async function updateStaffAction(_prev: FormState, formData: FormData): P
   const jobTitle = String(formData.get("jobTitle") ?? "").trim();
   const brandId = String(formData.get("brandId") ?? "");
   const phone = String(formData.get("phone") ?? "").trim() || null;
+  const whatsapp = String(formData.get("whatsapp") ?? "").trim() || null;
   const removePhoto = formData.get("removePhoto") === "on";
   if (!staffId || !firstName || !lastName || !workEmail || !brandId) {
     return { error: "Name, work email, and brand are required." };
@@ -248,6 +250,7 @@ export async function updateStaffAction(_prev: FormState, formData: FormData): P
       workEmail,
       jobTitleEn: jobTitle || "Team Member",
       phone,
+      whatsapp,
       updatedAt: now,
     })
     .where(eq(staff.id, staffId));

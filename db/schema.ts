@@ -86,6 +86,7 @@ export const staff = sqliteTable(
     jobTitleEn: text("job_title_en").notNull(),
     jobTitleAr: text("job_title_ar"),
     phone: text("phone"),
+    whatsapp: text("whatsapp"),
     status: text("status").notNull().default("ACTIVE"),
     createdAt: createdAt(),
     updatedAt: updatedAt(),

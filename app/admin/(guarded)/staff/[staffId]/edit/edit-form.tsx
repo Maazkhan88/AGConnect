@@ -12,6 +12,7 @@ export function EditStaffForm({
   workEmail,
   jobTitle,
   phone,
+  whatsapp,
   brandId,
   photoPath,
   brandOptions,
@@ -22,6 +23,7 @@ export function EditStaffForm({
   workEmail: string;
   jobTitle: string;
   phone: string;
+  whatsapp: string;
   brandId: string;
   photoPath: string | null;
   brandOptions: { id: string; displayName: string }[];
@@ -53,6 +55,10 @@ export function EditStaffForm({
       <label>
         Phone
         <input name="phone" defaultValue={phone} placeholder="+9715..." />
+      </label>
+      <label>
+        WhatsApp number
+        <input name="whatsapp" defaultValue={whatsapp} placeholder="+9715... (used for the WhatsApp button on their profile)" />
       </label>
       <label>
         Photo

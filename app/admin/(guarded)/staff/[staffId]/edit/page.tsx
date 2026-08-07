@@ -36,6 +36,7 @@ export default async function EditStaffPage({ params }: { params: Promise<{ staf
         workEmail={staffRow.workEmail}
         jobTitle={profileRow.jobTitle ?? staffRow.jobTitleEn}
         phone={staffRow.phone ?? ""}
+        whatsapp={staffRow.whatsapp ?? ""}
         brandId={profileRow.brandId}
         photoPath={profileRow.photoPath}
         brandOptions={brandOptions}

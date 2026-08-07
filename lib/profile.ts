@@ -17,6 +17,7 @@ export type PublicProfile = {
   officeMapUrl: string | null;
   workEmail: string;
   phone: string | null;
+  whatsapp: string | null;
   brand: {
     id: string;
     groupId: string;
@@ -48,6 +49,7 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
       staffDisplayName: staff.displayName,
       staffWorkEmail: staff.workEmail,
       staffPhone: staff.phone,
+      staffWhatsapp: staff.whatsapp,
       staffJobTitle: staff.jobTitleEn,
       brandId: brands.id,
       brandGroupId: brands.groupId,
@@ -93,6 +95,7 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
     officeMapUrl: row.officeMapUrl,
     workEmail: row.staffWorkEmail,
     phone: row.staffPhone,
+    whatsapp: row.staffWhatsapp,
     brand: {
       id: row.brandId,
       groupId: row.brandGroupId,

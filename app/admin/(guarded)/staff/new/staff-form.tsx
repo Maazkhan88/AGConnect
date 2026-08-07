@@ -33,6 +33,10 @@ export function StaffForm({ brandOptions }: { brandOptions: { id: string; displa
         <input name="phone" placeholder="+9715..." />
       </label>
       <label>
+        WhatsApp number
+        <input name="whatsapp" placeholder="+9715... (used for the WhatsApp button on their profile)" />
+      </label>
+      <label>
         Photo
         <input name="photo" type="file" accept="image/jpeg,image/png,image/webp" />
       </label>

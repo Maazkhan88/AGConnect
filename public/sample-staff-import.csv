@@ -1,3 +1,3 @@
-firstName,lastName,workEmail,jobTitle,phone,brand
-Amina,Yousef,amina.yousef@example.com,Sales Executive,+971501234567,Ghezlan
-Omar,Al Farsi,omar.alfarsi@example.com,Operations Manager,+971502345678,AEFM
+firstName,lastName,workEmail,jobTitle,phone,whatsapp,brand
+Amina,Yousef,amina.yousef@example.com,Sales Executive,+971501234567,+971501234567,Ghezlan
+Omar,Al Farsi,omar.alfarsi@example.com,Operations Manager,+971502345678,+971502345678,AEFM

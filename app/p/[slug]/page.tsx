@@ -49,8 +49,6 @@ export default async function PublicProfile({
   }
 
   const style = themeCssVariables(profile.theme) as CSSProperties;
-  const whatsapp = profile.brand.socials.find((social) => social.platform === "whatsapp");
-  const otherSocials = profile.brand.socials.filter((social) => social.platform !== "whatsapp");
   const initials = profile.displayName
     .split(" ")
     .map((part) => part[0])
@@ -108,44 +106,44 @@ export default async function PublicProfile({
                 <a href={`mailto:${profile.workEmail}`}>Contact info</a>
               </p>
             )}
-            <ShareDetailsButton
-              groupId={profile.brand.groupId}
-              brandId={profile.brand.id}
-              staffId={profile.staffId}
-              profileId={profile.id}
-              staffName={profile.displayName}
-            />
           </div>
-          <div className="ag-primary-actions network-actions">
+          <div className="contact-actions">
             <a
-              className="save-contact-action"
+              className="save-contact-btn"
               href={`/api/vcard/${profile.slug}`}
               download={`${profile.displayName.replace(/\s+/g, "-")}.vcf`}
             >
-              <UserRoundPlus size={18} /> Save contact
+              <UserRoundPlus size={20} /> Save contact
             </a>
-            {profile.phone && (
-              <a
-                className="round-contact-action"
-                href={`tel:${profile.phone}`}
-                aria-label={`Call ${profile.displayName}`}
-                title="Call"
-              >
-                <Phone size={20} />
-              </a>
-            )}
-            {whatsapp && (
-              <a
-                className="round-contact-action whatsapp-action"
-                href={whatsapp.url}
-                aria-label={`Message ${profile.displayName} on WhatsApp`}
-                title="WhatsApp"
-              >
-                <WhatsAppIcon width={21} height={21} />
-              </a>
+            {(profile.phone || profile.whatsapp) && (
+              <div className="secondary-cta-row">
+                {profile.phone && (
+                  <a href={`tel:${profile.phone}`} aria-label={`Call ${profile.displayName}`}>
+                    <Phone size={18} /> Call
+                  </a>
+                )}
+                {profile.whatsapp && (
+                  <a
+                    className="whatsapp-action"
+                    href={`https://wa.me/${profile.whatsapp.replace(/[^\d]/g, "")}`}
+                    aria-label={`Message ${profile.displayName} on WhatsApp`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <WhatsAppIcon width={18} height={18} /> WhatsApp
+                  </a>
+                )}
+              </div>
             )}
           </div>
         </section>
+        <ShareDetailsButton
+          groupId={profile.brand.groupId}
+          brandId={profile.brand.id}
+          staffId={profile.staffId}
+          profileId={profile.id}
+          staffName={profile.displayName}
+        />
         <section className="ag-details" aria-label="Contact information">
           <h2>Contact information</h2>
           <a href={`mailto:${profile.workEmail}`}>
@@ -190,7 +188,7 @@ export default async function PublicProfile({
               </div>
             </a>
           )}
-          {otherSocials.map((social) => (
+          {profile.brand.socials.map((social) => (
             <a href={social.url} key={social.platform} target="_blank" rel="noreferrer">
               <span>{socialIcon(social.platform)}</span>
               <div>

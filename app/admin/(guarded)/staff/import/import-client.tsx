@@ -12,6 +12,7 @@ type Row = {
   workEmail: string;
   jobTitle: string;
   phone: string;
+  whatsapp: string;
   brandId: string;
   selected: boolean;
   photo: File | null;
@@ -102,6 +103,7 @@ export function ImportClient({ brandOptions }: { brandOptions: BrandOption[] }) 
         workEmail: cells[col("workemail")]?.trim() ?? "",
         jobTitle: col("jobtitle") >= 0 ? (cells[col("jobtitle")]?.trim() ?? "") : "",
         phone: col("phone") >= 0 ? (cells[col("phone")]?.trim() ?? "") : "",
+        whatsapp: col("whatsapp") >= 0 ? (cells[col("whatsapp")]?.trim() ?? "") : "",
         brandId: col("brand") >= 0 ? resolveBrandId(cells[col("brand")] ?? "") : "",
         selected: true,
         photo: null,
@@ -143,6 +145,7 @@ export function ImportClient({ brandOptions }: { brandOptions: BrandOption[] }) 
           workEmail: r.workEmail,
           jobTitle: r.jobTitle,
           phone: r.phone || null,
+          whatsapp: r.whatsapp || null,
           brandId: r.brandId,
         })),
       ),
@@ -218,6 +221,7 @@ export function ImportClient({ brandOptions }: { brandOptions: BrandOption[] }) 
                   <th>Work email</th>
                   <th>Job title</th>
                   <th>Phone</th>
+                  <th>WhatsApp</th>
                   <th>Brand</th>
                   <th>Result</th>
                 </tr>
@@ -287,6 +291,9 @@ export function ImportClient({ brandOptions }: { brandOptions: BrandOption[] }) 
                     </td>
                     <td>
                       <input value={row.phone} onChange={(e) => updateRow(row.rowId, { phone: e.target.value })} />
+                    </td>
+                    <td>
+                      <input value={row.whatsapp} onChange={(e) => updateRow(row.rowId, { whatsapp: e.target.value })} placeholder="+9715..." />
                     </td>
                     <td>
                       <select value={row.brandId} onChange={(e) => updateRow(row.rowId, { brandId: e.target.value })}>

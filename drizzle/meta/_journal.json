@@ -15,6 +15,13 @@
       "when": 1785936281483,
       "tag": "0001_conscious_energizer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1786080310897,
+      "tag": "0002_soft_warbound",
+      "breakpoints": true
     }
   ]
 }

@@ -20,8 +20,8 @@ export default async function StaffImportPage() {
           <p className="eyebrow">Staff</p>
           <h1>Bulk import from CSV</h1>
           <p className="muted">
-            Columns: firstName, lastName, workEmail, jobTitle, phone, brand (brand name or slug). Review, edit, and
-            attach photos below before publishing — nothing is created until you click Import.
+            Columns: firstName, lastName, workEmail, jobTitle, phone, whatsapp, brand (brand name or slug). Review,
+            edit, and attach photos below before publishing — nothing is created until you click Import.
           </p>
         </div>
         <Link className="text-link" href="/sample-staff-import.csv" download>
