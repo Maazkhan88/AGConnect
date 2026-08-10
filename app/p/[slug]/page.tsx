@@ -90,8 +90,8 @@ export default async function PublicProfile({
                   className="network-name-logo"
                   src={profile.brand.logoPath}
                   alt={profile.brand.displayName}
-                  width={140}
-                  height={48}
+                  width={100}
+                  height={100}
                   priority
                   unoptimized
                 />
