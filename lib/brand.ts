@@ -84,3 +84,16 @@ export function slugify(value: string): string {
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
 }
+
+/**
+ * app/uploads/[...key]/route.ts serves images with a 1-year immutable cache
+ * header, since the R2 key for a brand's logo/banner never changes on
+ * re-upload — without a cache-busting suffix, browsers/CDN keep serving the
+ * old file after a re-upload. Append `?v=<updatedAt>` everywhere a
+ * logo/banner path is rendered so a new upload gets a new URL.
+ */
+export function versionedAssetUrl(path: string | null | undefined, updatedAt: number | null | undefined): string | null {
+  if (!path) return null;
+  if (!updatedAt) return path;
+  return `${path}?v=${updatedAt}`;
+}

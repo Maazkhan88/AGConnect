@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getDb } from "@/db/client";
 import { brands, profiles, staff } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { versionedAssetUrl } from "@/lib/brand";
 import { EditStaffForm } from "./edit-form";
 
 export default async function EditStaffPage({ params }: { params: Promise<{ staffId: string }> }) {
@@ -38,7 +39,7 @@ export default async function EditStaffPage({ params }: { params: Promise<{ staf
         phone={staffRow.phone ?? ""}
         whatsapp={staffRow.whatsapp ?? ""}
         brandId={profileRow.brandId}
-        photoPath={profileRow.photoPath}
+        photoPath={versionedAssetUrl(profileRow.photoPath, profileRow.updatedAt)}
         brandOptions={brandOptions}
       />
     </>

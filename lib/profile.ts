@@ -1,7 +1,7 @@
 import { eq, isNull } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { brandThemes, brands, profiles, staff } from "@/db/schema";
-import { DEFAULT_THEME, parseSocialLinks, parseThemeValues, type SocialLink } from "@/lib/brand";
+import { DEFAULT_THEME, parseSocialLinks, parseThemeValues, versionedAssetUrl, type SocialLink } from "@/lib/brand";
 import { resolveTheme, themeSchema, type Theme } from "@/lib/theme/theme";
 
 export type PublicProfile = {
@@ -42,6 +42,7 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
       jobTitle: profiles.jobTitle,
       biography: profiles.biography,
       photoPath: profiles.photoPath,
+      profileUpdatedAt: profiles.updatedAt,
       location: profiles.location,
       officeAddress: profiles.officeAddress,
       officeMapUrl: profiles.officeMapUrl,
@@ -58,6 +59,7 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
       brandWebsite: brands.website,
       brandLogoPath: brands.logoPath,
       brandBannerPath: brands.bannerPath,
+      brandUpdatedAt: brands.updatedAt,
       brandSocials: brands.socials,
     })
     .from(profiles)
@@ -89,7 +91,7 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
     displayName: row.staffDisplayName,
     jobTitle: row.jobTitle ?? row.staffJobTitle,
     biography: row.biography,
-    photoPath: row.photoPath,
+    photoPath: versionedAssetUrl(row.photoPath, row.profileUpdatedAt),
     location: row.location,
     officeAddress: row.officeAddress,
     officeMapUrl: row.officeMapUrl,
@@ -102,8 +104,8 @@ export async function getPublicProfile(slug: string): Promise<PublicProfile | nu
       slug: row.brandSlug,
       displayName: row.brandDisplayName,
       website: row.brandWebsite,
-      logoPath: row.brandLogoPath,
-      bannerPath: row.brandBannerPath,
+      logoPath: versionedAssetUrl(row.brandLogoPath, row.brandUpdatedAt),
+      bannerPath: versionedAssetUrl(row.brandBannerPath, row.brandUpdatedAt),
       socials: parseSocialLinks(row.brandSocials),
     },
     theme,

@@ -4,6 +4,12 @@ import { useActionState, useState } from "react";
 import { createOrUpdateBrandAction, type FormState } from "@/app/admin/actions";
 import type { SocialLink, SocialPlatform } from "@/lib/brand";
 import { SOCIAL_PLATFORMS } from "@/lib/brand";
+import { ImageCropInput } from "@/components/image-crop-input";
+
+// Matches the public profile's cover box (.network-cover height 220px inside
+// a ~560px-wide card) so a crop here looks right there without further
+// adjustment.
+const BANNER_ASPECT = 560 / 220;
 
 const initialState: FormState = {};
 
@@ -65,23 +71,20 @@ export function BrandForm({
         </label>
         <label>
           Banner
-          {brand?.bannerPath && !removeBanner ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "6px 0" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={brand.bannerPath} alt="" style={{ maxWidth: 120, maxHeight: 50, objectFit: "cover", borderRadius: 6 }} />
-              <button type="button" className="text-link" onClick={() => setRemoveBanner(true)}>
-                Remove
-              </button>
-            </div>
-          ) : removeBanner ? (
+          {removeBanner && (
             <p className="muted" style={{ fontSize: 12, margin: "6px 0" }}>
               Banner will be removed on save.{" "}
               <button type="button" className="text-link" onClick={() => setRemoveBanner(false)}>
                 Undo
               </button>
             </p>
-          ) : null}
-          <input name="banner" type="file" accept="image/jpeg,image/png,image/webp" />
+          )}
+          <ImageCropInput
+            name="banner"
+            aspect={BANNER_ASPECT}
+            currentImage={removeBanner ? null : brand?.bannerPath}
+            onRemove={() => setRemoveBanner(true)}
+          />
           {removeBanner && <input type="hidden" name="removeBanner" value="on" />}
         </label>
       </div>

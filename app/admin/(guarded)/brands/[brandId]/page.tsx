@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getDb } from "@/db/client";
 import { brands, brandThemes } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
-import { DEFAULT_THEME, parseSocialLinks } from "@/lib/brand";
+import { DEFAULT_THEME, parseSocialLinks, versionedAssetUrl } from "@/lib/brand";
 import { BrandForm } from "../brand-form";
 import { ThemeForm } from "../../themes/theme-form";
 
@@ -32,8 +32,8 @@ export default async function BrandDetailPage({ params }: { params: Promise<{ br
           website: brand.website,
           whatsapp: brand.whatsapp,
           socials: parseSocialLinks(brand.socials),
-          logoPath: brand.logoPath,
-          bannerPath: brand.bannerPath,
+          logoPath: versionedAssetUrl(brand.logoPath, brand.updatedAt),
+          bannerPath: versionedAssetUrl(brand.bannerPath, brand.updatedAt),
         }}
       />
       <h2 style={{ marginTop: 32 }}>Theme</h2>

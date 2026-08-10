@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { ArrowRight, IdCard, QrCode, Users2, LineChart, ShieldCheck, Smartphone } from "lucide-react";
 import { getDb } from "@/db/client";
 import { brands } from "@/db/schema";
+import { versionedAssetUrl } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ const steps = [
 export default async function Home() {
   const db = await getDb();
   const brandRows = await db
-    .select({ slug: brands.slug, displayName: brands.displayName, logoPath: brands.logoPath })
+    .select({ slug: brands.slug, displayName: brands.displayName, logoPath: brands.logoPath, updatedAt: brands.updatedAt })
     .from(brands)
     .where(eq(brands.status, "ACTIVE"));
 
@@ -100,7 +101,7 @@ export default async function Home() {
             brand.logoPath ? (
               <Image
                 key={brand.slug}
-                src={brand.logoPath}
+                src={versionedAssetUrl(brand.logoPath, brand.updatedAt)!}
                 alt={brand.displayName}
                 width={110}
                 height={48}
