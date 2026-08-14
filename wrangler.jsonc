@@ -16,7 +16,7 @@
     {
       "binding": "DB",
       "database_name": "agconnect-db",
-      "database_id": "3523e9bf-cd29-4163-bb86-0fc956e94072",
+      "database_id": "72877756-7d4f-42a8-92d4-27a68489cd79",
       "migrations_dir": "drizzle"
     }
   ],
