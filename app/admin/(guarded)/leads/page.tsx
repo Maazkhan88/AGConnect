@@ -21,8 +21,14 @@ export default async function LeadsPage() {
         </div>
       </header>
       {rows.length === 0 ? (
-        <p className="muted">No leads captured yet.</p>
+        <div className="empty-state">
+          <strong>No leads captured yet</strong>
+          <p>
+            Leads appear here as soon as a visitor shares their details from a published profile.
+          </p>
+        </div>
       ) : (
+        <div className="table-scroll">
         <table className="table">
           <thead>
             <tr>
@@ -45,6 +51,7 @@ export default async function LeadsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </>
   );

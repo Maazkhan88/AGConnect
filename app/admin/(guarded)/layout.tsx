@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { requireAdmin } from "@/lib/auth/current-user";
 import { logoutAction } from "../logout-action";
 
@@ -22,19 +23,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="shell">
       {/* Pure CSS toggle (checkbox + label) so the mobile nav works without any client JS —
           see `.nav-toggle-checkbox:checked ~ .sidebar` in globals.css. The checkbox must come
-          before .sidebar in the DOM for that sibling selector to work. */}
-      <input type="checkbox" id="nav-toggle" className="nav-toggle-checkbox" aria-hidden="true" />
-      <label htmlFor="nav-toggle" className="hamburger-btn" aria-label="Open menu">
-        <span />
-        <span />
-        <span />
+          before .sidebar in the DOM for that sibling selector to work. It is visually hidden
+          but still focusable, so the hamburger is reachable by keyboard. */}
+      <input type="checkbox" id="nav-toggle" className="nav-toggle-checkbox" />
+      <label htmlFor="nav-toggle" className="hamburger-btn">
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span className="sr-only">Toggle navigation menu</span>
       </label>
       <label htmlFor="nav-toggle" className="nav-backdrop" aria-hidden="true" />
       <aside className="sidebar">
-        <Link className="brand-mark" href="/">
-          AG<span>CONNECT</span>
+        <Link className="wordmark" href="/" aria-label="AGConnect home">
+          <Image src="/brands/ag-holding/logo.png" alt="AG Holding" width={110} height={28} unoptimized />
+          <span className="wordmark-text">AGConnect</span>
         </Link>
-        <nav>
+        <nav aria-label="Admin sections">
           {items.map((item) => (
             <Link href={item.href} key={item.href}>
               {item.label}

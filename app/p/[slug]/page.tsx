@@ -199,7 +199,7 @@ export default async function PublicProfile({
           ))}
         </section>
         <footer className="ag-profile-footer">
-          <span>AG CONNECT · DIGITAL IDENTITY</span>
+          <span>AGConnect · A digital platform by AG Holding</span>
         </footer>
       </article>
     </main>

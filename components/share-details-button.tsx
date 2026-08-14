@@ -40,36 +40,26 @@ export function ShareDetailsButton({
                 Thanks — {staffName.split(" ")[0]} now has your details.
               </p>
             ) : (
-              <form action={formAction} style={{ display: "grid", gap: 10 }}>
-                <h3 style={{ margin: "0 0 2px", fontSize: 17 }}>Share your details with {staffName.split(" ")[0]}</h3>
+              <form action={formAction} className="share-fab-form">
+                <h3>Share your details with {staffName.split(" ")[0]}</h3>
                 <input type="hidden" name="groupId" value={groupId} />
                 <input type="hidden" name="brandId" value={brandId} />
                 <input type="hidden" name="staffId" value={staffId} />
                 <input type="hidden" name="profileId" value={profileId} />
-                <input
-                  name="fullName"
-                  placeholder="Your name"
-                  required
-                  style={{ width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }}
-                />
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  style={{ width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }}
-                />
-                <input
-                  name="phone"
-                  placeholder="Phone"
-                  style={{ width: "100%", boxSizing: "border-box", padding: 10, borderRadius: 8, border: "1px solid #dfe4e1" }}
-                />
-                <label style={{ fontSize: 12, display: "flex", gap: 6, alignItems: "flex-start" }}>
-                  <input type="checkbox" name="consent" required style={{ marginTop: 2 }} />
+                <input name="fullName" type="text" placeholder="Your name" required aria-label="Your name" />
+                <input name="email" type="email" placeholder="Email" aria-label="Email" />
+                <input name="phone" type="tel" placeholder="Phone" aria-label="Phone" />
+                <label className="share-fab-consent">
+                  <input type="checkbox" name="consent" required />
                   <span>I agree to be contacted by {staffName.split(" ")[0]} using these details.</span>
                 </label>
-                {state.error && <p className="login-error">{state.error}</p>}
-                <button type="submit" className="button small" disabled={pending}>
-                  {pending ? "Sending…" : "Send"}
+                {state.error && (
+                  <p className="login-error" role="alert">
+                    {state.error}
+                  </p>
+                )}
+                <button type="submit" className="button" disabled={pending}>
+                  {pending ? "Sending…" : "Share details"}
                 </button>
               </form>
             )}

@@ -1,64 +1,2077 @@
 @import "tailwindcss";
 
-:root { --ink:#142621; --paper:#f4f1e9; --forest:#16483b; --mint:#b7dbc8; --gold:#c49345; }
-* { box-sizing:border-box; }
-body { margin:0; background:var(--paper); color:var(--ink); font-family:Arial, sans-serif; }
-a { color:inherit; text-decoration:none; }
-.home-shell { min-height:100vh; padding:0 clamp(24px,6vw,90px) 48px; background:radial-gradient(circle at 80% 20%,#d4e8dc 0,transparent 30%),var(--paper); }
-.topbar { height:92px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #193f3526; }
-.brand-mark { font:800 25px/1 Arial; letter-spacing:-1px; }.brand-mark span { display:block;font-size:9px;letter-spacing:4px;color:var(--gold);margin-top:3px; }
-.nav-actions,.hero-actions { display:flex;align-items:center;gap:28px;font-size:14px; }
-.button { display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--forest);color:white;padding:16px 22px;border-radius:6px;font-weight:700; }.button.small{padding:11px 15px;}.button.secondary{background:white;color:var(--forest);border:1px solid #dfe4e1;}
-.hero { min-height:620px;display:grid;align-content:center;position:relative;max-width:1200px;margin:auto; }
-.eyebrow { color:#35675a;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:700; }
-h1 { font:500 clamp(52px,8vw,112px)/.92 Georgia,serif;letter-spacing:-5px;margin:25px 0;max-width:900px; } h1 em{color:var(--forest);font-weight:400;}
-.hero-copy{font-size:clamp(17px,2vw,22px);line-height:1.6;max-width:680px;color:#3d554e}.hero-actions{margin-top:22px}.text-link{border-bottom:1px solid #61766f;padding-bottom:4px}
-.signal{position:absolute;right:0;bottom:70px;width:230px;border-left:2px solid var(--gold);padding:7px 0 7px 18px;display:grid;gap:5px}.signal span,.signal small{font-size:11px;color:#65756f}.signal strong{font:500 24px Georgia,serif}
-.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);max-width:1200px;margin:auto;border-top:1px solid #193f3526}.feature-grid article{padding:35px 36px 20px 0}.feature-grid h2{font:500 22px Georgia,serif}.feature-grid p{color:#566a64;line-height:1.6;font-size:14px;max-width:320px}.feature-grid svg{color:var(--gold)}
-.brand-strip{max-width:1200px;margin:0 auto;padding:28px 0;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(24px,4vw,52px);border-top:1px solid #193f3526}.brand-strip img{filter:grayscale(1);opacity:.75;transition:opacity .2s,filter .2s}.brand-strip img:hover{filter:none;opacity:1}.brand-strip-name{font:700 13px/1 Arial;letter-spacing:.5px;color:#65756f}
-.steps-section{max-width:1200px;margin:auto;padding:56px 0;border-top:1px solid #193f3526}.steps-heading{font:500 30px Georgia,serif;margin:0 0 28px}.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}.step-card{background:#fff;border:1px solid #dfe4e1;border-radius:14px;padding:24px}.step-number{font:800 13px/1 Arial;color:var(--gold);letter-spacing:1px}.step-card h3{font:500 19px Georgia,serif;margin:10px 0 8px}.step-card p{color:#566a64;line-height:1.55;font-size:14px;margin:0}
-.cta-band{max-width:1200px;margin:0 auto 40px;border-top:1px solid #193f3526;padding:48px 0 8px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}.cta-band h2{font:500 26px Georgia,serif;margin:0 0 6px}.cta-band p{color:#566a64;margin:0;font-size:15px}
-@media(max-width:800px){.steps-grid{grid-template-columns:1fr}.cta-band{flex-direction:column;align-items:flex-start}}
-.shell { min-height:100vh;display:grid;grid-template-columns:260px 1fr;background:#f6f7f5 }.sidebar{background:#102b25;color:white;padding:28px 22px;display:flex;flex-direction:column}.sidebar .brand-mark{display:block;margin-bottom:45px}.sidebar nav{display:grid;gap:7px}.sidebar a{padding:11px 12px;border-radius:7px;color:#c6d4d0;font-size:14px}.sidebar a.active{background:#ffffff14;color:white}.sidebar-footer{margin-top:auto;padding-top:20px;border-top:1px solid #ffffff1a;font-size:12px}.sidebar-footer .muted{color:#8fa19c;word-break:break-all;margin:0 0 6px}.sidebar-footer .text-link{background:none;border:none;color:#c6d4d0;cursor:pointer;padding:0;font-size:12px;text-decoration:underline}.workspace{padding:34px clamp(24px,5vw,64px)}.workspace header{display:flex;justify-content:space-between;align-items:center;margin-bottom:38px}.workspace h1{font-size:42px;letter-spacing:-2px;margin:0}.workspace .muted{color:#6c7975}.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.metric{background:white;padding:22px;border:1px solid #dfe4e1;border-radius:12px}.metric strong{font:500 34px Georgia,serif;display:block;margin-top:15px}.panel-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-top:16px}.panel{background:white;border:1px solid #dfe4e1;border-radius:12px;padding:24px;min-height:240px}.rows{display:grid}.row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid #edf0ee}.badge{font-size:12px;padding:5px 9px;border-radius:999px;background:#e5f2ea;color:#236342}
-.profile-wrap{min-height:100vh;background:#e8eee9;padding:40px 20px}.profile-card{max-width:520px;margin:auto;background:white;border-radius:24px;overflow:hidden;box-shadow:0 24px 70px #173d3020}.profile-cover{height:170px;background:linear-gradient(135deg,#123c31,#28715c);padding:26px;color:white}.profile-body{padding:0 30px 34px}.avatar{width:104px;height:104px;border:5px solid white;border-radius:50%;background:#d5ad73;display:grid;place-items:center;font:500 38px Georgia;margin-top:-52px}.profile-body h1{font-size:34px;letter-spacing:-1px;margin:18px 0 5px}.profile-body .title{color:#4f6a61;margin:0 0 25px}.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.action-grid a{background:#153f34;color:white;padding:13px 5px;text-align:center;border-radius:8px;font-size:13px}.bio{line-height:1.7;color:#4c5f59;margin-top:28px}
-.nav-toggle-checkbox{display:none}.hamburger-btn{display:none}.nav-backdrop{display:none}
-@media(max-width:800px){.nav-actions>a:first-child,.signal{display:none}.hero{min-height:560px}.feature-grid,.metric-grid,.panel-grid{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.sidebar{display:none}h1{letter-spacing:-3px}.action-grid{grid-template-columns:1fr 1fr 1fr}
-.hamburger-btn{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;position:fixed;top:14px;left:14px;width:42px;height:42px;background:#102b25;border-radius:9px;z-index:60;cursor:pointer}
-.hamburger-btn span{display:block;width:18px;height:2px;background:#fff;border-radius:2px}
-.workspace{padding-top:72px}
-.nav-toggle-checkbox:checked~.sidebar{display:flex;position:fixed;top:0;left:0;bottom:0;width:260px;z-index:59;overflow-y:auto;box-shadow:0 0 40px #00000060}
-.nav-toggle-checkbox:checked~.nav-backdrop{display:block;position:fixed;inset:0;background:#00000066;z-index:58}
+/* ==========================================================================
+   AGConnect stylesheet
+   --------------------------------------------------------------------------
+   Organised into the following sections — keep new rules in the right one:
+
+     1. Design tokens            (:root, single source of truth)
+     2. Base + reset             (body, links, focus, motion, a11y helpers)
+     3. Primitives               (buttons, links, eyebrows, pills, badges)
+     4. Layout primitives        (page shell, container, section rhythm)
+     5. Homepage                 (.hp-*)
+     6. Public profile page      (.ag-profile-* / .network-* — BRAND THEMED)
+     7. Admin shell + sidebar    (.shell, .sidebar, mobile nav)
+     8. Admin dashboard          (.metric, .panel, .rows)
+     9. Tables + forms + toolbar
+    10. Admin login
+    11. Public profile overlays  (share FAB, image crop tool)
+    12. Print
+
+   Visual language follows AG Holding (agholding.ae): crisp white / off-white
+   surfaces, #046bd2 blue as the confident primary, thin architectural
+   dividers, generous whitespace, square-ish components, restrained motion.
+
+   IMPORTANT — section 6 consumes the `--brand-*` custom properties emitted by
+   `themeCssVariables()` in lib/theme/theme.ts. Those variable names are a
+   contract with that function: rename anything else you like, but never those.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. DESIGN TOKENS
+   Palette extracted from AG Holding's live Elementor/Astra theme variables.
+   ========================================================================== */
+
+:root {
+  /* -- Brand palette ----------------------------------------------------- */
+  --ag-blue: #046bd2; /* primary   — astglobalcolor0 */
+  --ag-blue-dark: #045cb4; /* pressed / hover state */
+  --ag-blue-tint: #e7f0fb; /* 8% blue wash for selected surfaces */
+  --ag-navy: #1e293b; /* headings on light surfaces */
+  --ag-slate: #334155; /* body copy */
+  --ag-ink: #111111; /* near-black, display headings */
+  --ag-green: #44795c; /* sparing accent (used on their site) */
+
+  /* -- Surfaces ---------------------------------------------------------- */
+  --surface: #ffffff;
+  --surface-muted: #f0f5fa; /* soft off-white / light blue-grey */
+  --surface-inverse: var(--ag-navy);
+
+  /* -- Text -------------------------------------------------------------- */
+  --text: var(--ag-ink);
+  --text-strong: var(--ag-navy);
+  --text-body: var(--ag-slate);
+  --text-muted: #64748b;
+  --text-on-inverse: #e2e8f0;
+
+  /* -- Lines ------------------------------------------------------------- */
+  --border: #d1d5db;
+  --border-soft: #e5e9ef; /* thin architectural dividers */
+
+  /* -- Status ------------------------------------------------------------ */
+  --danger: #b3261e;
+  --danger-tint: #fdecea;
+  --success: var(--ag-green);
+  --success-tint: #e8f1ec;
+
+  /* -- Typography -------------------------------------------------------- */
+  --font-sans:
+    var(--font-nunito), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.8125rem; /* 13 */
+  --text-base: 0.9375rem; /* 15 */
+  --text-md: 1.0625rem; /* 17 */
+  --text-lg: 1.375rem; /* 22 */
+  --text-xl: 1.75rem; /* 28 */
+  --display-sm: clamp(1.75rem, 3vw, 2.25rem);
+  --display-md: clamp(2rem, 4vw, 3rem);
+  --display-lg: clamp(2.5rem, 6vw, 4.25rem);
+  --tracking-eyebrow: 0.16em;
+
+  /* -- Spacing scale ----------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --container: 1200px;
+
+  /* -- Radii — square-ish, never pill except status badges --------------- */
+  --radius-sm: 3px;
+  --radius: 4px;
+  --radius-lg: 6px;
+  --radius-pill: 999px;
+
+  /* -- Elevation — restrained --------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgb(17 24 39 / 6%);
+  --shadow: 0 2px 8px rgb(17 24 39 / 6%);
+  --shadow-lg: 0 18px 48px rgb(30 41 59 / 12%);
+
+  /* -- Motion ------------------------------------------------------------ */
+  --ease: cubic-bezier(0.2, 0, 0.2, 1);
+  --duration: 180ms;
+  --duration-slow: 320ms;
+
+  /* -- Controls ---------------------------------------------------------- */
+  --tap-target: 44px; /* WCAG 2.1 AA minimum touch target */
 }
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
-.login-shell{min-height:100vh;display:grid;place-items:center;background:#0f2a24;padding:20px}.login-card{width:min(100%,380px);background:white;border-radius:14px;padding:32px 28px;display:grid;gap:10px;box-shadow:0 30px 80px #00000040}.login-card h1{font:700 24px/1.3 Arial,sans-serif;letter-spacing:normal;margin:6px 0 0}.login-card label{font-size:12px;font-weight:700;color:#4a5a55;margin-top:8px}.login-card input{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #dfe4e1;border-radius:8px;font-size:14px}.login-card .button{margin-top:10px;width:100%}.login-error{color:#b3261e;font-size:13px;margin:0}.login-links{display:flex;justify-content:flex-end;margin-top:-4px}.login-links a{font-size:12px;color:#4a5a55;text-decoration:underline}.share-details-toggle{background:none;border:1px solid var(--brand-border,#d9dfdc);color:var(--brand-text,#08262d);font-size:13px;font-weight:700;padding:9px 16px;border-radius:999px;cursor:pointer}
-.table{width:100%;border-collapse:collapse;background:white;border:1px solid #dfe4e1;border-radius:12px;overflow:hidden}.table th,.table td{text-align:left;padding:12px 16px;border-bottom:1px solid #edf0ee;font-size:14px}.table th{background:#f6f7f5;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#6c7975}.table tr:last-child td{border-bottom:none}
-.form-grid{display:grid;gap:14px;max-width:560px;background:white;border:1px solid #dfe4e1;border-radius:12px;padding:24px}.form-grid label{display:grid;gap:6px;font-size:13px;font-weight:700;color:#3a4744}.form-grid input,.form-grid select,.form-grid textarea{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #dfe4e1;border-radius:8px;font:inherit}.form-grid .color-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.form-grid input[type=color]{padding:2px;height:40px;cursor:pointer}.form-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.pill{font-size:11px;padding:4px 10px;border-radius:999px;background:#e5f2ea;color:#236342;font-weight:700;text-transform:uppercase}.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px}
-.network-name-row{display:flex;align-items:stretch;justify-content:space-between;gap:24px}.network-name-row h1{flex:1}.network-name-logo{width:100px!important;height:100%!important;object-fit:contain;object-position:center;margin-top:0}.network-actions{align-items:center!important;gap:10px!important}.network-actions .save-contact-action{padding-inline:22px!important}.network-actions .round-contact-action{width:44px!important;height:44px!important;min-height:44px!important;padding:0!important;border-radius:50%!important;background:#fff!important;color:var(--brand-text,#08262d)!important;border:1px solid #9eaaa6!important;flex:0 0 44px}.network-actions .whatsapp-action{background:var(--brand-secondary,#4b8065)!important;color:#fff!important;border-color:var(--brand-secondary,#4b8065)!important}@media(max-width:600px){.network-name-row{gap:12px;align-items:stretch}.network-name-logo{width:80px!important}.network-actions{display:flex!important;grid-template-columns:none!important}.network-actions .save-contact-action{flex:1}.network-actions .round-contact-action{flex:0 0 44px}}
-.ag-logo-image{height:70px;width:118px;display:flex;align-items:center}.ag-logo-image img{width:118px;height:auto;max-height:68px;object-fit:contain;object-position:left center}.ag-profile-header button{position:relative}.ag-profile-header button span{position:absolute;right:0;top:48px;white-space:nowrap;font-size:10px;color:#4b8065}.ag-portrait img{object-fit:cover!important;object-position:center 27%!important}
-.ag-profile-shell{background:var(--brand-background,#f2f3f1);padding:28px 16px;align-items:start}.ag-profile-card{width:min(100%,760px);border-radius:var(--brand-radius-card,13px);border:1px solid var(--brand-border,#d9dfdc);box-shadow:0 2px 10px #071f2410}.network-cover{height:220px;position:relative;overflow:hidden;background:linear-gradient(118deg,var(--brand-primary,#06272e) 0%,var(--brand-primary,#0c3a3c) 55%,var(--brand-secondary,#4b8065) 100%)}.network-cover::after{content:"";position:absolute;width:420px;height:420px;border:75px solid #ffffff12;border-radius:50%;right:-90px;top:-165px}.network-cover-mark{position:absolute;left:44px;top:29px;color:#ffffff12;font:900 180px/1 Arial;letter-spacing:-28px}.network-share{position:absolute;z-index:2;right:22px;top:20px}.network-share button{width:42px;height:42px;border-radius:50%;border:1px solid #ffffff60;background:#ffffffed;color:#08262d;display:grid;place-items:center;position:relative}.network-share button span{position:absolute;right:0;top:48px;color:white;font-size:10px}.network-intro{position:relative;padding:88px 34px 28px}.network-avatar{position:absolute;left:34px;top:-92px;width:168px;height:168px;border-radius:50%;overflow:hidden;border:6px solid white;background:var(--brand-primary,#343b3d);box-shadow:0 1px 5px #0002}.network-avatar img{object-fit:cover;object-position:center 22%}.network-avatar-fallback{width:100%;height:100%;display:grid;place-items:center;color:#fff;font:600 48px Arial;letter-spacing:-1px}.network-company{position:absolute;right:30px;top:22px;width:122px;height:78px;display:grid;place-items:center}.network-company img{max-width:112px;max-height:74px;width:auto;height:auto;object-fit:contain}.network-copy h1{font:600 38px/1.05 Arial,sans-serif;letter-spacing:-1.4px;color:var(--brand-text,#102d2e);margin:0 0 8px}.network-headline{font-size:18px;color:var(--brand-text,#203a38);margin:0 0 8px}.network-location{font-size:13px;color:var(--brand-text-muted,#70807b);margin:0}.network-location a{color:var(--brand-secondary,#32705a);font-weight:700}.network-intro .ag-primary-actions{display:flex;margin-top:23px}.network-intro .ag-primary-actions a{min-height:42px;border-radius:999px;padding:0 21px}.ag-details{border-top:7px solid var(--brand-background,#f2f3f1);padding:22px 34px}.ag-details h2{font-size:20px;margin:0 0 5px;color:var(--brand-text,#163330)}.ag-details>a{grid-template-columns:44px 1fr;padding:14px 0}.network-company-panel{border-top:7px solid var(--brand-background,#f2f3f1);padding:25px 34px;display:flex;gap:15px;align-items:center}.network-company-icon{width:50px;height:50px;border-radius:8px;background:var(--brand-background,#e2eee7);color:var(--brand-secondary,#4b8065);display:grid;place-items:center}.network-company-panel div:last-child{display:grid;gap:3px}.network-company-panel small{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:#7a8984}.network-company-panel strong{font-size:16px;color:#183632}.network-company-panel span{font-size:13px;color:#687974}.ag-profile-footer{padding:16px 30px;font-size:9px;letter-spacing:1.8px}@media(max-width:600px){.ag-profile-shell{padding:0}.ag-profile-card{border-radius:0;border:0}.network-cover{height:170px}.network-cover-mark{font-size:135px;left:20px}.network-intro{padding:76px 22px 24px}.network-avatar{width:140px;height:140px;left:22px;top:-73px;border-width:5px}.network-company{right:16px;top:14px;width:105px}.network-copy h1{font-size:32px}.network-headline{font-size:16px}.network-intro .ag-primary-actions{display:grid;grid-template-columns:1.3fr 1fr}.ag-details,.network-company-panel{padding-left:22px;padding-right:22px}}
-.ag-profile-shell{min-height:100vh;background:var(--brand-background,#eef1ef);padding:34px 18px;display:grid;place-items:center}.ag-profile-card{width:min(100%,560px);background:var(--brand-surface,#fff);box-shadow:0 24px 80px #071f2426;overflow:hidden}.ag-profile-header{height:88px;background:var(--brand-surface,#fff);display:flex;align-items:center;justify-content:space-between;padding:18px 26px}.ag-profile-header button{border:1px solid var(--brand-border,#d7dfdc);background:var(--brand-surface,#fff);color:var(--brand-text,#08262d);width:42px;height:42px;border-radius:50%;display:grid;place-items:center}.ag-logo{display:grid;color:var(--brand-text,#08262d);font-weight:900;line-height:.75}.ag-logo span{font-size:31px;letter-spacing:-4px}.ag-logo span::after{content:"";display:inline-block;width:14px;height:13px;background:var(--brand-secondary,#4b8065);margin-left:-4px}.ag-logo small{font-size:7px;letter-spacing:6px;margin-top:8px}.ag-portrait{height:360px;position:relative;background:#252a2b}.ag-portrait img{object-fit:cover;object-position:center 27%}.ag-identity{padding:32px 30px 27px}.ag-kicker{font-size:10px;letter-spacing:2.4px;color:var(--brand-secondary,#4b8065);font-weight:800}.ag-identity h1{font:500 43px/1.05 Georgia,serif;letter-spacing:-1.8px;margin:11px 0 7px;color:var(--brand-text,#08262d)}.ag-role{font-size:17px;color:var(--brand-text-muted,#526662);margin:0}.ag-primary-actions{display:grid;grid-template-columns:1.35fr 1fr;gap:10px;margin-top:27px}.ag-primary-actions a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;background:var(--brand-button-primary,#08262d);color:var(--brand-button-primary-text,#fff);font-weight:700;font-size:14px;border:1px solid var(--brand-button-primary,#08262d);border-radius:var(--brand-radius-button,0)}.ag-primary-actions .ag-outline{background:var(--brand-button-secondary,white);color:var(--brand-button-secondary-text,#08262d)}.ag-details{border-top:1px solid var(--brand-border,#e3e8e5);padding:7px 30px 21px}.ag-details>a{display:grid;grid-template-columns:42px 1fr;align-items:center;gap:13px;padding:16px 0;border-bottom:1px solid var(--brand-border,#edf0ee)}.ag-details>a>span{height:38px;width:38px;background:var(--brand-background,#e8f0eb);color:var(--brand-secondary,#4b8065);display:grid;place-items:center;border-radius:50%}.ag-details div{display:grid;gap:4px}.ag-details small{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--brand-text-muted,#7b8985)}.ag-details strong{font-size:14px;line-height:1.5;color:var(--brand-text,#17332f)}.ag-profile-footer{background:var(--brand-button-primary,#08262d);color:#cbd8d3;padding:20px 30px;display:flex;align-items:center;justify-content:center;gap:9px;font-size:11px;letter-spacing:1px;text-transform:uppercase}@media(max-width:600px){.ag-profile-shell{padding:0;display:block}.ag-profile-card{min-height:100vh}.ag-portrait{height:43vh;min-height:310px}}
-@media print{.sidebar,.no-print{display:none!important}.shell{display:block!important}}
 
-/* Contact actions: Save contact (big, own row) then Call / WhatsApp side by side */
-.contact-actions{margin-top:23px;display:grid;gap:10px}
-.contact-actions .save-contact-btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;width:100%;box-sizing:border-box;background:var(--brand-button-primary,#08262d);color:var(--brand-button-primary-text,#fff);font-weight:700;font-size:15px;border:1px solid var(--brand-button-primary,#08262d);border-radius:var(--brand-radius-button,999px)}
-.contact-actions .secondary-cta-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.contact-actions .secondary-cta-row a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;background:var(--brand-button-secondary,#fff);color:var(--brand-button-secondary-text,#08262d);font-weight:700;font-size:14px;border:1px solid var(--brand-border,#d9dfdc);border-radius:var(--brand-radius-button,999px)}
-.contact-actions .secondary-cta-row a.whatsapp-action{background:var(--brand-secondary,#4b8065);color:#fff;border-color:var(--brand-secondary,#4b8065)}
+/* ==========================================================================
+   2. BASE + RESET
+   ========================================================================== */
 
-/* Floating "Share your details" button on public profiles */
-.share-fab{position:fixed;right:20px;bottom:20px;z-index:40;display:flex;align-items:center;gap:8px;background:var(--brand-primary,#08262d);color:#fff;border:none;border-radius:999px;padding:14px 20px;font-weight:700;font-size:14px;box-shadow:0 10px 30px #00000040;cursor:pointer}
-.share-fab span{white-space:nowrap}
-@media(max-width:480px){.share-fab span{display:none}.share-fab{padding:14px;border-radius:50%}}
-.share-fab-backdrop{position:fixed;inset:0;background:#00000066;z-index:41;display:flex;align-items:flex-end;justify-content:center}
-.share-fab-panel{position:relative;width:min(100%,480px);background:#fff;border-radius:16px 16px 0 0;padding:24px;box-shadow:0 -10px 40px #00000030}
-.share-fab-close{position:absolute;top:14px;right:14px;background:none;border:none;color:#6c7975;cursor:pointer;padding:4px}
-@media(min-width:640px){.share-fab-backdrop{align-items:center}.share-fab-panel{border-radius:16px}}
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+/* Visible focus everywhere. Never remove this without an equal replacement. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--ag-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Screen-reader-only, but still focusable. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  background: var(--ag-blue);
+  color: #fff;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  font-weight: 700;
+  transition: top var(--duration) var(--ease);
+}
+.skip-link:focus {
+  top: var(--space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   3. PRIMITIVES
+   ========================================================================== */
+
+/* Wordmark lockup — always the real AG Holding logo asset, never styled text
+   standing in for a logo. See public/brands/ag-holding/logo.png. */
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+}
+.wordmark img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+.wordmark-text {
+  font-size: var(--text-md);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  padding-inline-start: var(--space-3);
+  border-inline-start: 1px solid var(--border);
+  line-height: 1.2;
+}
+
+/* Buttons — square-ish. Pills are reserved for status badges. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  padding: 0 var(--space-5);
+  background: var(--ag-blue);
+  color: #fff;
+  border: 1px solid var(--ag-blue);
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 700;
+  font-size: var(--text-base);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background var(--duration) var(--ease),
+    border-color var(--duration) var(--ease);
+}
+.button:hover {
+  background: var(--ag-blue-dark);
+  border-color: var(--ag-blue-dark);
+}
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.button.secondary {
+  background: var(--surface);
+  color: var(--ag-blue-dark);
+  border-color: var(--border);
+}
+.button.secondary:hover {
+  background: var(--ag-blue-tint);
+  border-color: var(--ag-blue);
+}
+.button.small {
+  min-height: 38px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+}
+/* Destructive actions must never read as a primary CTA. */
+.button.danger {
+  background: var(--surface);
+  color: var(--danger);
+  border-color: #e7c3c0;
+}
+.button.danger:hover {
+  background: var(--danger-tint);
+  border-color: var(--danger);
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ag-blue-dark);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.text-link:hover {
+  color: var(--ag-blue);
+}
+/* Destructive text links stay visually distinct from navigational ones. */
+.text-link.danger {
+  color: var(--danger);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ag-blue-dark);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* Status chips — the one place a full pill is correct. */
+.pill,
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+  color: var(--text-strong);
+  border: 1px solid var(--border-soft);
+  white-space: nowrap;
+}
+.pill {
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.pill.ok,
+.badge.ok {
+  background: var(--success-tint);
+  color: #2f5b45;
+  border-color: #cfe0d6;
+}
+.pill.warn,
+.badge.warn {
+  background: #fdf4e3;
+  color: #7a5a12;
+  border-color: #eddcb8;
+}
+.pill.danger,
+.badge.danger {
+  background: var(--danger-tint);
+  color: var(--danger);
+  border-color: #efc9c6;
+}
+
+/* Empty states — "No leads captured yet" etc. */
+.empty-state {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  text-align: center;
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-muted);
+  color: var(--text-muted);
+  font-size: var(--text-base);
+}
+.empty-state strong {
+  color: var(--text-strong);
+  font-size: var(--text-md);
+}
+
+/* ==========================================================================
+   4. LAYOUT PRIMITIVES
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ==========================================================================
+   5. HOMEPAGE
+   ========================================================================== */
+
+.hp {
+  background: var(--surface);
+  color: var(--text-body);
+}
+
+/* -- 5.1 Header ---------------------------------------------------------- */
+
+.hp-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(255 255 255 / 92%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-soft);
+}
+.hp-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-height: 72px;
+}
+.hp-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+.hp-nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+.hp-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-strong);
+  padding: var(--space-2) 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--duration) var(--ease);
+}
+.hp-nav-links a:hover {
+  border-bottom-color: var(--ag-blue);
+}
+.hp-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.hp-nav-toggle {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  /* Mobile drawer. Toggled by a real <button aria-expanded> in SiteNav. */
+  .hp-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--tap-target);
+    height: var(--tap-target);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-strong);
+    cursor: pointer;
+  }
+  .hp-nav {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(88vw, 340px);
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--space-5);
+    padding: 88px var(--gutter) var(--space-6);
+    background: var(--surface);
+    border-inline-start: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-lg);
+    overflow-y: auto;
+    z-index: 60;
+  }
+  .hp-nav:not(.is-open) {
+    display: none;
+  }
+  .hp-nav-links,
+  .hp-nav-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .hp-nav-links a {
+    min-height: var(--tap-target);
+    border-bottom: 1px solid var(--border-soft);
+    font-size: var(--text-md);
+  }
+  .hp-nav-actions {
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+  .hp-nav-actions .text-link {
+    justify-content: center;
+    min-height: var(--tap-target);
+  }
+  .hp-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgb(17 24 39 / 45%);
+    border: 0;
+    z-index: 55;
+  }
+}
+
+/* -- 5.2 Section rhythm --------------------------------------------------- */
+
+.hp-section {
+  padding-block: clamp(56px, 8vw, 104px);
+  border-top: 1px solid var(--border-soft);
+}
+.hp-section.tinted {
+  background: var(--surface-muted);
+}
+.hp-section-head {
+  max-width: 720px;
+  margin-bottom: var(--space-7);
+}
+.hp-section-head h2 {
+  margin: var(--space-3) 0 var(--space-3);
+  font-size: var(--display-sm);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  font-weight: 800;
+}
+.hp-section-head p {
+  margin: 0;
+  font-size: var(--text-md);
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+
+/* -- 5.3 Hero ------------------------------------------------------------- */
+
+.hp-hero {
+  padding-block: clamp(48px, 7vw, 96px);
+  background:
+    linear-gradient(180deg, var(--surface-muted) 0%, var(--surface) 100%);
+}
+.hp-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+.hp-hero h1 {
+  margin: var(--space-4) 0 var(--space-5);
+  font-size: var(--display-lg);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+  color: var(--ag-ink);
+}
+.hp-hero-copy {
+  margin: 0 0 var(--space-6);
+  font-size: var(--text-md);
+  line-height: 1.65;
+  color: var(--text-body);
+  max-width: 54ch;
+}
+.hp-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.hp-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-soft);
+}
+.hp-hero-meta div {
+  display: grid;
+  gap: 2px;
+}
+.hp-hero-meta strong {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  line-height: 1.1;
+}
+.hp-hero-meta span {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* -- 5.4 Product visual: a scaled preview of a real published profile.
+      Themed live from that brand's own --brand-* variables. --------------- */
+
+.hp-device {
+  justify-self: center;
+  width: min(100%, 340px);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+.hp-device-screen {
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--brand-surface, #fff);
+  border: 1px solid var(--border-soft);
+}
+.hp-device-cover {
+  position: relative;
+  height: 104px;
+  background: linear-gradient(
+    118deg,
+    var(--brand-primary, #046bd2) 0%,
+    var(--brand-primary, #046bd2) 55%,
+    var(--brand-secondary, #045cb4) 100%
+  );
+}
+.hp-device-cover::after {
+  content: "";
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  border: 38px solid rgb(255 255 255 / 8%);
+  border-radius: 50%;
+  inset-inline-end: -45px;
+  top: -82px;
+}
+.hp-device-body {
+  position: relative;
+  padding: 46px 18px 18px;
+}
+.hp-device-avatar {
+  position: absolute;
+  inset-inline-start: 18px;
+  top: -42px;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #fff;
+  background: var(--brand-primary, #046bd2);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 26px;
+}
+.hp-device-avatar img {
+  object-fit: cover;
+  object-position: center 22%;
+}
+.hp-device-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.hp-device-name strong {
+  font-size: var(--text-md);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--brand-text, #111);
+  line-height: 1.2;
+}
+.hp-device-logo {
+  width: 62px;
+  height: auto;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.hp-device-role {
+  margin: 4px 0 14px;
+  font-size: var(--text-xs);
+  color: var(--brand-text-muted, #64748b);
+}
+.hp-device-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  background: var(--brand-button-primary, #046bd2);
+  color: var(--brand-button-primary-text, #fff);
+  border-radius: var(--brand-radius-button, 4px);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+.hp-device-rows {
+  display: grid;
+  margin-top: 12px;
+  border-top: 1px solid var(--brand-border, #e5e9ef);
+}
+.hp-device-rows div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--brand-border, #e5e9ef);
+  font-size: var(--text-xs);
+  color: var(--brand-text, #111);
+  overflow: hidden;
+}
+.hp-device-rows div span {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 50%;
+  background: var(--brand-background, #f0f5fa);
+  color: var(--brand-secondary, #045cb4);
+}
+.hp-device-rows div small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hp-device-caption {
+  margin: var(--space-3) 0 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .hp-hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hp-device {
+    order: -1;
+    width: min(100%, 300px);
+  }
+}
+
+/* -- 5.5 Brand showcase --------------------------------------------------- */
+
+/* Desktop: vertical panels separated by thin lines. Expansion is driven by
+   :hover AND :focus-within so it is fully keyboard reachable. The brand name
+   is always visible, so a collapsed panel is still legible. */
+.hp-brand-panels {
+  display: flex;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface);
+  min-height: 300px;
+}
+.hp-brand-panel {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-inline-start: 1px solid var(--border-soft);
+  color: var(--text-strong);
+  transition:
+    flex-grow var(--duration-slow) var(--ease),
+    background var(--duration) var(--ease);
+}
+.hp-brand-panel:first-child {
+  border-inline-start: 0;
+}
+.hp-brand-panel:hover,
+.hp-brand-panel:focus-visible,
+.hp-brand-panel:focus-within {
+  flex-grow: 2.4;
+  background: var(--surface-muted);
+}
+.hp-brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 56px;
+}
+.hp-brand-logo img {
+  max-width: 100%;
+  max-height: 56px;
+  width: auto;
+  height: auto;
+  object-fit: contain; /* never stretch or distort a brand logo */
+}
+.hp-brand-name {
+  display: block;
+  font-size: var(--text-md);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.hp-brand-more {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--ag-blue-dark);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--duration-slow) var(--ease),
+    transform var(--duration-slow) var(--ease);
+}
+.hp-brand-panel:hover .hp-brand-more,
+.hp-brand-panel:focus-visible .hp-brand-more,
+.hp-brand-panel:focus-within .hp-brand-more {
+  opacity: 1;
+  transform: none;
+}
+/* If motion is reduced, reveal the detail without relying on the transition. */
+@media (prefers-reduced-motion: reduce) {
+  .hp-brand-more {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* With seven portfolio companies the collapsed panels get narrow; trim the
+   padding before the layout switches to the mobile rail. */
+@media (max-width: 1200px) {
+  .hp-brand-panel {
+    padding: var(--space-4);
+  }
+  .hp-brand-name {
+    font-size: var(--text-base);
+  }
+}
+
+/* Mobile: horizontally scrollable, snapping cards. */
+.hp-brand-rail {
+  display: none;
+}
+@media (max-width: 900px) {
+  .hp-brand-panels {
+    display: none;
+  }
+  .hp-brand-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(72vw, 260px);
+    gap: var(--space-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: var(--space-4);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scrollbar-width: thin;
+  }
+  .hp-brand-card {
+    scroll-snap-align: start;
+    display: grid;
+    align-content: space-between;
+    gap: var(--space-4);
+    min-height: 200px;
+    padding: var(--space-5);
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    color: var(--text-strong);
+  }
+  .hp-brand-card .hp-brand-more {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -- 5.6 Benefits — editorial, not six identical floating cards ---------- */
+
+.hp-benefits-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+.hp-benefit-list {
+  display: grid;
+  border-top: 1px solid var(--border-soft);
+}
+.hp-benefit {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+/* Varied proportions: the first item in each pair reads as the lead. */
+.hp-benefit:nth-child(odd) {
+  padding-block: var(--space-6);
+}
+.hp-benefit-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius);
+  background: var(--ag-blue-tint);
+  color: var(--ag-blue-dark);
+}
+.hp-benefit h3 {
+  margin: 0 0 4px;
+  font-size: var(--text-md);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-strong);
+  line-height: 1.3;
+}
+.hp-benefit p {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  max-width: 56ch;
+}
+
+/* Real, scannable QR for the live profile — generated server-side by lib/qr.ts */
+.hp-qr-aside {
+  position: sticky;
+  top: 104px;
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  justify-items: center;
+  text-align: center;
+}
+.hp-qr-frame {
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+}
+.hp-qr-frame svg {
+  display: block;
+  width: 168px;
+  height: 168px;
+}
+.hp-qr-aside h3 {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 800;
+  color: var(--text-strong);
+}
+.hp-qr-aside p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .hp-benefits-layout {
+    grid-template-columns: 1fr;
+  }
+  .hp-qr-aside {
+    position: static;
+    order: -1;
+  }
+}
+
+/* -- 5.7 How it works ----------------------------------------------------- */
+
+.hp-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--border-soft);
+}
+.hp-step {
+  padding: var(--space-6) var(--space-5) var(--space-5) 0;
+  border-inline-start: 1px solid var(--border-soft);
+  padding-inline-start: var(--space-5);
+}
+.hp-step:first-child {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+.hp-step-number {
+  display: block;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ag-blue);
+  line-height: 1;
+}
+.hp-step h3 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--text-md);
+  font-weight: 800;
+  color: var(--text-strong);
+}
+.hp-step p {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--text-muted);
+  max-width: 40ch;
+}
+@media (max-width: 760px) {
+  .hp-steps {
+    grid-template-columns: 1fr;
+  }
+  .hp-step {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--border-soft);
+  }
+}
+
+/* -- 5.8 Administrator section ------------------------------------------- */
+
+.hp-admin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+/* A faithful reproduction of the real admin dashboard tiles (.metric-grid). */
+.hp-admin-preview {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.hp-admin-chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--surface-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.hp-admin-chrome i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--border);
+  flex: 0 0 9px;
+}
+.hp-admin-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border-soft);
+}
+.hp-admin-tile {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  background: var(--surface);
+}
+.hp-admin-tile span {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.hp-admin-tile strong {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  line-height: 1;
+}
+/* Figures only administrators may see are represented, never invented. */
+.hp-admin-tile.private strong {
+  color: var(--border);
+  letter-spacing: 0.08em;
+}
+.hp-admin-note {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--border-soft);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+@media (max-width: 900px) {
+  .hp-admin-layout {
+    grid-template-columns: 1fr;
+  }
+  .hp-admin-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* -- 5.9 Final CTA -------------------------------------------------------- */
+
+.hp-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: clamp(36px, 5vw, 64px);
+  background: var(--surface-inverse);
+  border-radius: var(--radius-lg);
+  color: var(--text-on-inverse);
+}
+.hp-cta h2 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--display-sm);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+  color: #fff;
+}
+.hp-cta p {
+  margin: 0;
+  max-width: 52ch;
+  color: #cbd5e1;
+  font-size: var(--text-base);
+}
+.hp-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.hp-cta .button.secondary {
+  background: transparent;
+  color: #fff;
+  border-color: rgb(255 255 255 / 45%);
+}
+.hp-cta .button.secondary:hover {
+  background: rgb(255 255 255 / 12%);
+  border-color: #fff;
+}
+
+/* -- 5.10 Footer ---------------------------------------------------------- */
+
+.hp-footer {
+  background: var(--surface-muted);
+  border-top: 1px solid var(--border-soft);
+  padding-block: var(--space-7) var(--space-6);
+  margin-top: clamp(56px, 8vw, 104px);
+}
+.hp-footer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+.hp-footer-brand p {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  max-width: 34ch;
+}
+.hp-footer-brand a {
+  color: var(--ag-blue-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.hp-footer-nav {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+.hp-footer-nav strong {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+.hp-footer-nav a {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-strong);
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+.hp-footer-nav a:hover {
+  color: var(--ag-blue-dark);
+}
+.hp-footer-legal {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   6. PUBLIC PROFILE PAGE  —  app/p/[slug]/page.tsx
+   --------------------------------------------------------------------------
+   Every colour here comes from the per-brand `--brand-*` custom properties
+   emitted by themeCssVariables() and set inline on .ag-profile-shell. This is
+   the brand theming system: do not replace these vars with global tokens, and
+   keep the fallback values in the var() calls.
+
+   This section is the consolidation of what used to be two competing, partly
+   overlapping .ag-profile-* rule sets. The values below are the *effective*
+   cascaded result of the old file, so rendering is unchanged.
+   ========================================================================== */
+
+.ag-profile-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  align-items: center;
+  background: var(--brand-background, #eef1ef);
+  padding: 34px 18px;
+}
+
+.ag-profile-card {
+  width: min(100%, 560px);
+  background: var(--brand-surface, #fff);
+  border: 1px solid var(--brand-border, #d9dfdc);
+  border-radius: var(--brand-radius-card, 13px);
+  box-shadow: 0 24px 80px #071f2426;
+  overflow: hidden;
+}
+
+/* -- 6.1 Cover ----------------------------------------------------------- */
+
+.network-cover {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(
+    118deg,
+    var(--brand-primary, #06272e) 0%,
+    var(--brand-primary, #0c3a3c) 55%,
+    var(--brand-secondary, #4b8065) 100%
+  );
+}
+.network-cover::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border: 75px solid #ffffff12;
+  border-radius: 50%;
+  right: -90px;
+  top: -165px;
+}
+.network-cover-mark {
+  position: absolute;
+  left: 44px;
+  top: 29px;
+  color: #ffffff12;
+  font: 900 180px/1 var(--font-sans);
+  letter-spacing: -28px;
+}
+.network-share {
+  position: absolute;
+  z-index: 2;
+  right: 22px;
+  top: 20px;
+}
+.network-share button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #ffffff60;
+  background: #ffffffed;
+  color: #08262d;
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+}
+.network-share button span {
+  position: absolute;
+  right: 0;
+  top: 48px;
+  color: #fff;
+  font-size: 10px;
+}
+
+/* -- 6.2 Identity -------------------------------------------------------- */
+
+.network-intro {
+  position: relative;
+  padding: 88px 34px 28px;
+}
+.network-avatar {
+  position: absolute;
+  left: 34px;
+  top: -92px;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 6px solid #fff;
+  background: var(--brand-primary, #343b3d);
+  box-shadow: 0 1px 5px #0002;
+}
+.network-avatar img {
+  object-fit: cover;
+  object-position: center 22%;
+}
+.network-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font: 600 48px var(--font-sans);
+  letter-spacing: -1px;
+}
+.network-name-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 24px;
+}
+.network-name-row h1 {
+  flex: 1;
+  margin: 0 0 8px;
+  font: 600 38px/1.05 var(--font-sans);
+  letter-spacing: -1.4px;
+  color: var(--brand-text, #102d2e);
+}
+/* Brand logos vary wildly in aspect ratio; fixing the width and letting the
+   height fill keeps wide logos legible. The !important flags override the
+   inline width/height next/image writes on the element. */
+.network-name-logo {
+  width: 100px !important;
+  height: 100% !important;
+  object-fit: contain;
+  object-position: center;
+  margin-top: 0;
+}
+.network-headline {
+  font-size: 18px;
+  color: var(--brand-text, #203a38);
+  margin: 0 0 8px;
+}
+.network-location {
+  font-size: 13px;
+  color: var(--brand-text-muted, #70807b);
+  margin: 0;
+}
+.network-location a {
+  color: var(--brand-secondary, #32705a);
+  font-weight: 700;
+}
+
+/* -- 6.3 Contact actions: Save contact, then Call / WhatsApp side by side -- */
+
+.contact-actions {
+  margin-top: 23px;
+  display: grid;
+  gap: 10px;
+}
+.contact-actions .save-contact-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--brand-button-primary, #08262d);
+  color: var(--brand-button-primary-text, #fff);
+  font-weight: 700;
+  font-size: 15px;
+  border: 1px solid var(--brand-button-primary, #08262d);
+  border-radius: var(--brand-radius-button, 999px);
+}
+.contact-actions .secondary-cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.contact-actions .secondary-cta-row a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  background: var(--brand-button-secondary, #fff);
+  color: var(--brand-button-secondary-text, #08262d);
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid var(--brand-border, #d9dfdc);
+  border-radius: var(--brand-radius-button, 999px);
+}
+.contact-actions .secondary-cta-row a.whatsapp-action {
+  background: var(--brand-secondary, #4b8065);
+  color: #fff;
+  border-color: var(--brand-secondary, #4b8065);
+}
+
+/* -- 6.4 Detail list ------------------------------------------------------ */
+
+.ag-details {
+  border-top: 1px solid var(--brand-border, #e3e8e5);
+  padding: 7px 30px 21px;
+}
+.ag-details h2 {
+  font-size: 20px;
+  margin: 0 0 5px;
+  color: var(--brand-text, #163330);
+}
+.ag-details > a {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--brand-border, #edf0ee);
+}
+.ag-details > a > span {
+  height: 38px;
+  width: 38px;
+  background: var(--brand-background, #e8f0eb);
+  color: var(--brand-secondary, #4b8065);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.ag-details div {
+  display: grid;
+  gap: 4px;
+}
+.ag-details small {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--brand-text-muted, #7b8985);
+}
+.ag-details strong {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--brand-text, #17332f);
+}
+
+.ag-profile-footer {
+  background: var(--brand-button-primary, #08262d);
+  color: #cbd8d3;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .ag-profile-shell {
+    padding: 0;
+    display: block;
+  }
+  .ag-profile-card {
+    min-height: 100vh;
+    border-radius: 0;
+    border: 0;
+  }
+  .network-cover {
+    height: 170px;
+  }
+  .network-cover-mark {
+    font-size: 135px;
+    left: 20px;
+  }
+  .network-intro {
+    padding: 76px 22px 24px;
+  }
+  .network-avatar {
+    width: 140px;
+    height: 140px;
+    left: 22px;
+    top: -73px;
+    border-width: 5px;
+  }
+  .network-name-row {
+    gap: 12px;
+  }
+  .network-name-logo {
+    width: 80px !important;
+  }
+  .network-name-row h1 {
+    font-size: 32px;
+  }
+  .network-headline {
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================================
+   7. ADMIN SHELL + SIDEBAR
+   ========================================================================== */
+
+.shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 264px 1fr;
+  background: var(--surface-muted);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-4);
+  background: var(--surface);
+  border-inline-end: 1px solid var(--border-soft);
+  color: var(--text-body);
+}
+.sidebar .wordmark {
+  margin-bottom: var(--space-6);
+  padding-inline: var(--space-2);
+}
+.sidebar nav {
+  display: grid;
+  gap: 2px;
+}
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  color: var(--text-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border-inline-start: 2px solid transparent;
+  transition: background var(--duration) var(--ease);
+}
+.sidebar nav a:hover {
+  background: var(--surface-muted);
+}
+.sidebar nav a.active {
+  background: var(--ag-blue-tint);
+  border-inline-start-color: var(--ag-blue);
+  color: var(--ag-blue-dark);
+  font-weight: 700;
+}
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-soft);
+  font-size: var(--text-xs);
+}
+.sidebar-footer .muted {
+  word-break: break-all;
+  margin: 0 0 var(--space-2);
+}
+
+.workspace {
+  padding: var(--space-6) var(--gutter) var(--space-8);
+  min-width: 0;
+}
+.workspace > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+.workspace h1 {
+  margin: var(--space-2) 0 var(--space-1);
+  font-size: var(--display-sm);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+  line-height: 1.15;
+}
+.workspace h2 {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--text-strong);
+  margin: 0 0 var(--space-4);
+}
+.workspace p {
+  margin: 0;
+}
+
+/* -- 7.1 Mobile sidebar: pure-CSS checkbox + label toggle, no client JS.
+      The checkbox is visually hidden but still focusable, so the hamburger is
+      keyboard operable; focus is mirrored onto the label. The checkbox must
+      stay before .sidebar in the DOM for the sibling selectors to work. ---- */
+
+.nav-toggle-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.hamburger-btn,
+.nav-backdrop {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .workspace {
+    padding-top: 76px;
+  }
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    position: fixed;
+    top: var(--space-3);
+    inset-inline-start: var(--space-3);
+    width: var(--tap-target);
+    height: var(--tap-target);
+    background: var(--ag-blue);
+    border-radius: var(--radius);
+    z-index: 60;
+    cursor: pointer;
+  }
+  .hamburger-btn span[aria-hidden] {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+  }
+  .nav-toggle-checkbox:focus-visible + .hamburger-btn {
+    outline: 3px solid var(--ag-blue-dark);
+    outline-offset: 3px;
+  }
+  .nav-toggle-checkbox:checked ~ .sidebar {
+    display: flex;
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    bottom: 0;
+    width: 264px;
+    z-index: 59;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+  }
+  .nav-toggle-checkbox:checked ~ .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgb(17 24 39 / 45%);
+    z-index: 58;
+  }
+}
+
+/* ==========================================================================
+   8. ADMIN DASHBOARD
+   ========================================================================== */
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--space-4);
+}
+.metric {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.metric .muted {
+  font-size: var(--text-xs);
+}
+.metric strong {
+  display: block;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+  line-height: 1;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  min-width: 0;
+}
+.rows {
+  display: grid;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: var(--text-base);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .panel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   9. TABLES, FORMS, TOOLBAR
+   ========================================================================== */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-size: var(--text-base);
+}
+.table th,
+.table td {
+  text-align: start;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: middle;
+}
+.table th {
+  background: var(--surface-muted);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.table tr:last-child td {
+  border-bottom: none;
+}
+/* Wide admin tables must scroll inside their own container, never the page.
+   `.table-scroll` is the explicit wrapper; the narrow-viewport rule below is a
+   safety net for the admin tables that are not wrapped. */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 900px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+.form-grid {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 560px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.form-grid label {
+  display: grid;
+  gap: 6px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+/* width/box-sizing keep inputs from collapsing to their intrinsic size. */
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--tap-target);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+}
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+  border-color: var(--ag-blue);
+}
+.form-grid textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.form-grid .color-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+/* Native colour swatches render invisible without a tight padding + height. */
+.form-grid input[type="color"] {
+  padding: 2px;
+  height: 40px;
+  min-height: 40px;
+  cursor: pointer;
+}
+.form-grid input[type="checkbox"],
+.form-grid input[type="radio"] {
+  width: auto;
+  min-height: 0;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+/* ==========================================================================
+   10. ADMIN LOGIN
+   ========================================================================== */
+
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background:
+    linear-gradient(180deg, var(--surface-muted) 0%, var(--surface) 100%);
+}
+.login-card {
+  width: min(100%, 400px);
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6) var(--space-5);
+  display: grid;
+  gap: var(--space-2);
+}
+.login-card h1 {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-strong);
+  line-height: 1.25;
+}
+.login-card label {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--text-strong);
+  margin-top: var(--space-2);
+}
+.login-card input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--tap-target);
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+.login-card input:focus {
+  border-color: var(--ag-blue);
+}
+.login-card .button {
+  margin-top: var(--space-3);
+  width: 100%;
+}
+.login-error {
+  color: var(--danger);
+  background: var(--danger-tint);
+  border: 1px solid #efc9c6;
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+.login-back {
+  margin-top: var(--space-4);
+  text-align: center;
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   11. PUBLIC PROFILE OVERLAYS
+   ========================================================================== */
+
+/* Floating "Share your details" button on public profiles. Brand themed. */
+.share-fab {
+  position: fixed;
+  inset-inline-end: 20px;
+  bottom: 20px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  background: var(--brand-primary, #08262d);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0 20px;
+  font: inherit;
+  font-weight: 700;
+  font-size: var(--text-base);
+  box-shadow: 0 10px 30px #00000040;
+  cursor: pointer;
+}
+.share-fab span {
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .share-fab span {
+    display: none;
+  }
+  .share-fab {
+    padding: 0;
+    width: var(--tap-target);
+    justify-content: center;
+    border-radius: 50%;
+  }
+}
+.share-fab-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(17 24 39 / 45%);
+  z-index: 41;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.share-fab-panel {
+  position: relative;
+  width: min(100%, 480px);
+  background: #fff;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-5);
+  box-shadow: 0 -10px 40px #00000030;
+}
+.share-fab-panel h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+  font-weight: 800;
+  color: var(--text-strong);
+}
+.share-fab-close {
+  position: absolute;
+  top: 10px;
+  inset-inline-end: 10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+.share-fab-close:hover {
+  background: var(--surface-muted);
+}
+.share-fab-form {
+  display: grid;
+  gap: var(--space-3);
+}
+.share-fab-form input[type="text"],
+.share-fab-form input[type="email"],
+.share-fab-form input[type="tel"],
+.share-fab-form input:not([type]) {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--tap-target);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+.share-fab-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.share-fab-consent input {
+  margin-top: 3px;
+  flex: 0 0 auto;
+}
+@media (min-width: 640px) {
+  .share-fab-backdrop {
+    align-items: center;
+  }
+  .share-fab-panel {
+    border-radius: var(--radius-lg);
+  }
+}
 
 /* Banner crop tool (react-easy-crop) */
-.crop-overlay{position:fixed;inset:0;background:#000000aa;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
-.crop-panel{background:#fff;border-radius:14px;padding:20px;width:min(100%,520px);display:grid;gap:12px}
-.crop-stage{position:relative;width:100%;height:260px;background:#111;border-radius:8px;overflow:hidden}
-.crop-zoom-label{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:#3a4744}
-.crop-zoom-label input[type=range]{flex:1}
-.crop-actions{display:flex;justify-content:flex-end;gap:14px}
+.crop-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000000aa;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+}
+.crop-panel {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  width: min(100%, 520px);
+  display: grid;
+  gap: var(--space-3);
+}
+.crop-stage {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background: #111;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.crop-zoom-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.crop-zoom-label input[type="range"] {
+  flex: 1;
+}
+.crop-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ==========================================================================
+   12. PRINT  —  supports the admin Cards & QR export sheet
+   ========================================================================== */
+
+@media print {
+  .sidebar,
+  .hamburger-btn,
+  .no-print {
+    display: none !important;
+  }
+  .shell {
+    display: block !important;
+  }
+  body {
+    background: #fff;
+  }
+}
