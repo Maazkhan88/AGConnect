@@ -23,15 +23,19 @@ export async function GET(_req: Request, { params }: { params: Promise<{ format:
     .from(profiles)
     .where(eq(profiles.status, "PUBLISHED"));
 
-  const files = await Promise.all(
-    rows.map(async (row) => {
-      const url = `${baseUrl}/p/${row.slug}?src=qr`;
-      if (format === "svg") {
-        return { name: `${row.slug}.svg`, content: await qrCodeSvg(url) };
-      }
-      return { name: `${row.slug}.png`, content: await qrCodePngBytes(url) };
-    }),
-  );
+  // Sequential, not Promise.all — PNG generation is real per-pixel CPU work
+  // with no native codec available here, so holding every profile's buffer
+  // in memory at once is worth avoiding even though it doesn't change the
+  // total CPU spent either way.
+  const files: { name: string; content: string | Uint8Array }[] = [];
+  for (const row of rows) {
+    const url = `${baseUrl}/p/${row.slug}?src=qr`;
+    if (format === "svg") {
+      files.push({ name: `${row.slug}.svg`, content: await qrCodeSvg(url) });
+    } else {
+      files.push({ name: `${row.slug}.png`, content: await qrCodePngBytes(url) });
+    }
+  }
 
   const zip = createZip(files);
   return new NextResponse(zip as unknown as BodyInit, {
