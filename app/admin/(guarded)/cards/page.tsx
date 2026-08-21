@@ -8,6 +8,7 @@ import { qrCodeSvg } from "@/lib/qr";
 import { IssueCardButton } from "./issue-card-button";
 import { NfcWriteButton } from "@/components/nfc-write-button";
 import { QrZoomButton } from "@/components/qr-zoom-button";
+import { DownloadAllPngButton } from "@/components/download-all-png-button";
 
 export const dynamic = "force-dynamic";
 
@@ -67,9 +68,7 @@ export default async function CardsPage() {
             <Link className="button small secondary" href="/admin/cards/download-all/svg">
               Download all (SVG)
             </Link>
-            <Link className="button small secondary" href="/admin/cards/download-all/png">
-              Download all (PNG)
-            </Link>
+            <DownloadAllPngButton items={withQr.map((row) => ({ slug: row.slug, svg: row.qr }))} />
           </div>
         )}
       </header>
