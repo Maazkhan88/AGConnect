@@ -3,7 +3,7 @@ import { getDb } from "@/db/client";
 import { brands, profiles, staff } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
 import { getSiteBaseUrl } from "@/lib/site-url";
-import { qrCodeSvg } from "@/lib/qr";
+import { qrCodeSvg, fetchLogoDataUri } from "@/lib/qr";
 import { PrintButton } from "./print-button";
 
 export const dynamic = "force-dynamic";
@@ -18,14 +18,26 @@ export default async function CardsExportPage() {
       slug: profiles.slug,
       displayName: staff.displayName,
       brandName: brands.displayName,
+      brandLogoPath: brands.logoPath,
     })
     .from(profiles)
     .innerJoin(staff, eq(staff.id, profiles.staffId))
     .leftJoin(brands, eq(brands.id, profiles.brandId))
     .where(eq(profiles.status, "PUBLISHED"));
 
+  const logoCache = new Map<string, Promise<string | null>>();
+  function getLogoDataUri(logoPath: string | null): Promise<string | null> {
+    if (!logoPath) return Promise.resolve(null);
+    if (!logoCache.has(logoPath)) logoCache.set(logoPath, fetchLogoDataUri(baseUrl, logoPath));
+    return logoCache.get(logoPath)!;
+  }
+
   const withQr = await Promise.all(
-    rows.map(async (row) => ({ ...row, qr: await qrCodeSvg(`${baseUrl}/p/${row.slug}?src=qr`) })),
+    rows.map(async (row) => {
+      const logoDataUri = await getLogoDataUri(row.brandLogoPath);
+      const qr = await qrCodeSvg(`${baseUrl}/p/${row.slug}?src=qr`, { logoDataUri });
+      return { ...row, qr };
+    }),
   );
 
   return (

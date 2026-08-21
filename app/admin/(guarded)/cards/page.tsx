@@ -4,7 +4,7 @@ import { getDb } from "@/db/client";
 import { cards, brands, profiles, staff } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth/current-user";
 import { getSiteBaseUrl } from "@/lib/site-url";
-import { qrCodeSvg, qrCodeDataUrl } from "@/lib/qr";
+import { qrCodeSvg, fetchLogoDataUri } from "@/lib/qr";
 import { IssueCardButton } from "./issue-card-button";
 import { NfcWriteButton } from "@/components/nfc-write-button";
 
@@ -25,6 +25,7 @@ export default async function CardsPage() {
       slug: profiles.slug,
       displayName: staff.displayName,
       brandName: brands.displayName,
+      brandLogoPath: brands.logoPath,
       cardId: cards.id,
       cardDisplayNumber: cards.displayNumber,
       cardStatus: cards.status,
@@ -36,14 +37,23 @@ export default async function CardsPage() {
     .leftJoin(cards, eq(cards.profileId, profiles.id))
     .where(eq(profiles.status, "PUBLISHED"));
 
+  // Cache one logo fetch per brand rather than once per staff member.
+  const logoCache = new Map<string, Promise<string | null>>();
+  function getLogoDataUri(logoPath: string | null): Promise<string | null> {
+    if (!logoPath) return Promise.resolve(null);
+    if (!logoCache.has(logoPath)) logoCache.set(logoPath, fetchLogoDataUri(baseUrl, logoPath));
+    return logoCache.get(logoPath)!;
+  }
+
   const withQr = await Promise.all(
     // ?src=qr on the encoded URL is what lets a scan of this exact code be
     // distinguished from someone just clicking the /p/<slug> link elsewhere —
     // see the qr_scan event logged in app/p/[slug]/page.tsx.
     rows.map(async (row) => {
       const url = `${baseUrl}/p/${row.slug}?src=qr`;
-      const [svg, pngDataUrl] = await Promise.all([qrCodeSvg(url), qrCodeDataUrl(url)]);
-      return { ...row, qr: svg, pngDataUrl };
+      const logoDataUri = await getLogoDataUri(row.brandLogoPath);
+      const svg = await qrCodeSvg(url, { logoDataUri });
+      return { ...row, qr: svg };
     }),
   );
 
@@ -83,7 +93,11 @@ export default async function CardsPage() {
               <tr key={row.profileId}>
                 <td dangerouslySetInnerHTML={{ __html: row.qr }} style={{ width: 48 }} />
                 <td>
-                  <a className="text-link" href={row.pngDataUrl} download={`${row.slug}-qr.png`}>
+                  <a
+                    className="text-link"
+                    href={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(row.qr)}`}
+                    download={`${row.slug}-qr.svg`}
+                  >
                     Download
                   </a>
                 </td>
