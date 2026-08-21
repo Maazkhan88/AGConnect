@@ -7,6 +7,7 @@ import { getSiteBaseUrl } from "@/lib/site-url";
 import { qrCodeSvg, fetchLogoDataUri } from "@/lib/qr";
 import { IssueCardButton } from "./issue-card-button";
 import { NfcWriteButton } from "@/components/nfc-write-button";
+import { QrZoomButton } from "@/components/qr-zoom-button";
 
 export const dynamic = "force-dynamic";
 
@@ -92,10 +93,7 @@ export default async function CardsPage() {
             {withQr.map((row) => (
               <tr key={row.profileId}>
                 <td style={{ width: 64 }}>
-                  <div
-                    className="qr-thumb"
-                    dangerouslySetInnerHTML={{ __html: row.qr }}
-                  />
+                  <QrZoomButton svg={row.qr} label={row.displayName} />
                 </td>
                 <td>
                   <a
