@@ -60,14 +60,16 @@ export default async function PublicProfile({
     <main className="ag-profile-shell" style={style}>
       <article className="ag-profile-card">
         <header
-          className="network-cover"
+          className={profile.brand.bannerPath ? "network-cover has-photo" : "network-cover"}
           style={
             profile.brand.bannerPath
               ? { backgroundImage: `url(${profile.brand.bannerPath})`, backgroundSize: "cover", backgroundPosition: "center" }
               : undefined
           }
         >
-          <div className="network-cover-mark">{profile.brand.displayName.slice(0, 2).toUpperCase()}</div>
+          {!profile.brand.bannerPath && (
+            <div className="network-cover-mark">{profile.brand.displayName.slice(0, 2).toUpperCase()}</div>
+          )}
           <div className="network-share">
             <ProfileShareButton name={profile.displayName} title={profile.jobTitle} />
           </div>

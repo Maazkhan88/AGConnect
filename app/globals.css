@@ -1233,6 +1233,11 @@ svg {
   right: -90px;
   top: -165px;
 }
+/* A real uploaded banner photo should show as-is — no gradient decoration
+   or initials watermark layered on top of it. */
+.network-cover.has-photo::after {
+  display: none;
+}
 .network-cover-mark {
   position: absolute;
   left: 44px;
