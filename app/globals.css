@@ -2075,3 +2075,16 @@ svg {
     background: #fff;
   }
 }
+
+/* Fixed-size QR thumbnail in the Cards & QR table — without this, the
+   generated SVG's own width/height gets squeezed down to whatever the
+   table's auto layout happens to give the cell (see svg{max-width:100%}
+   in the base reset), rendering it tiny instead of at its real size. */
+.qr-thumb {
+  width: 56px;
+  height: 56px;
+}
+.qr-thumb svg {
+  width: 100%;
+  height: 100%;
+}

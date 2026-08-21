@@ -91,7 +91,12 @@ export default async function CardsPage() {
           <tbody>
             {withQr.map((row) => (
               <tr key={row.profileId}>
-                <td dangerouslySetInnerHTML={{ __html: row.qr }} style={{ width: 48 }} />
+                <td style={{ width: 64 }}>
+                  <div
+                    className="qr-thumb"
+                    dangerouslySetInnerHTML={{ __html: row.qr }}
+                  />
+                </td>
                 <td>
                   <a
                     className="text-link"
